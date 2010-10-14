@@ -1,1 +1,4 @@
 settings.py
+initial_data.json
+initial_data.json.users
+*.pyc

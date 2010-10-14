@@ -1,0 +1,17 @@
+news-single.html
+
+<p>This shows a single post from the News module</p>
+
+<p>
+	<strong>{{post.title}}</strong><br />
+	<em>{{post.published}}</em><br />
+	{{post.content}}<br /><br />
+	Published by {{post.author}} in the {% for category in post.categories %} <a href="{{category.permalink}}">{{category.name}}</a>, {% endfor %} and tagged {% for tag in post.tags %} <a href="{{tag.permalink}}">{{tag}}</a>, {% endfor %}
+</p>
+
+<p>
+	<strong>Comments:</strong><br/>
+	{% for comment in post.comments %}
+	<em>{{comment.author}}</em>: <small>{{comment.published}}</small> {{comment.content}}<br />
+	{% endfor %}
+</p>

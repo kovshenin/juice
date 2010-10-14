@@ -1,0 +1,13 @@
+index.html
+
+<p>This page will contain a list of all posts and their excerpts (News Module):</p>
+
+{% for post in posts %}
+<p>
+	<strong><a href="{% url juice.front.views.single post.slug %}">{{post.title}}</a></strong><br />
+	<em>{{post.published}}</em><br />
+	{{post.excerpt}}
+</p>
+{% endfor %}
+
+<p>And here are some pages: {% for page in pages %}<a href="{{page.permalink}}">{{page.title}}</a>, {% endfor %}</p>

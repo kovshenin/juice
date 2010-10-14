@@ -1,0 +1,14 @@
+news-list.html
+
+<p>This page will contain a list of all posts and their excerpts (News Module) in a certain category (Taxonomy Module):</p>
+
+{% if category %}<p>Below is a list of posts in the <strong>{{category}}</strong> category.</p>{% endif %}
+{% if tag %}<p>Below is a list of posts tagged <strong>{{tag}}</strong>.</p>{% endif %}
+
+{% for post in posts %}
+<p>
+	<strong><a href="{% url juice.front.views.single post.slug %}">{{post.title}}</a></strong><br />
+	<em>{{post.published}}</em><br />
+	{{post.excerpt}}
+</p>
+{% endfor %}

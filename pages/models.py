@@ -14,7 +14,10 @@ class Page(models.Model):
 	parent = models.ForeignKey('self', null=True, blank=True)
 	
 	def __unicode__(self):
-		return self.title
+		if self.parent:
+			return "- %s" % self.title
+		else:
+			return self.title
 		
 	class Meta:
 		db_table = 'juice_pages_page'

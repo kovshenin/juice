@@ -17,6 +17,6 @@ urlpatterns = patterns('',
 	(r'^posts/(?P<post_slug>[-\w]+)/$', 'juice.front.views.single'),
 	(r'^category/(?P<category_slug>[-\w]+)/$', 'juice.front.views.category'),
 	(r'^tag/(?P<tag_slug>[-\w]+)/$', 'juice.front.views.tag'),
-	(r'^(?P<slug>[-\w\/]+)/$', 'juice.front.views.route')
-	#(r'^(?P<page_slug>[-\w]+)/$', 'juice.front.views.page'),
+	(r'^(?P<slug>[-\w\/]+)/$', 'juice.front.views.route'),
+	(r'^(?P<page_slug>[-\w]+)/$', 'juice.front.views.page'),
 )

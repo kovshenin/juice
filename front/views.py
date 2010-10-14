@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
 
@@ -60,14 +60,21 @@ def route(request, slug):
 	slugs = slug.split('/')
 	
 	# remove double slashes
+	i = 0
 	while '' in slugs:
+		i += 1
 		slugs.remove('')
-
+		
+	# redirect to the clean URL
+	if i > 0:
+		return HttpResponseRedirect('/%s/' % '/'.join(slugs))
+	
+	# otherwise check if the parent/child is okay	
 	parent = Page.objects.get(slug=slugs.pop(0), parent__id__isnull=True)
 	
 	for page_slug in slugs:
 		p = Page.objects.get(slug=page_slug, parent__id=parent.id)
 		parent = p
 		
-	# redirect to the page view
+	# redirect to the page view if everything's fine otherwise an exception is thrown
 	return page(request, parent.slug)

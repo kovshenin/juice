@@ -11,15 +11,4 @@ index.html
 {% endfor %}
 
 <p>And here are some pages:</p>
-<ul>
-{% for page in pages %}
-	<li><a href="{{page.permalink}}">{{page.title}}</a></li>
-	{% if page.subpages %}
-	<ul>
-	{% for subpage in page.subpages %}
-		<li><a href="{{subpage.permalink}}">{{subpage.title}}</a></li>
-	{% endfor %}
-	</ul>
-	{% endif %}
-{% endfor %}
-</ul>
+{% include "snippets/pages_tree.html" %}

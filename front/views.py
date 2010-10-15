@@ -12,14 +12,13 @@ from juice.front.functions import make_permalink
 # homepage
 def index(request):
 	p = Post.objects.all().order_by('-published')[:10]
-	pages = Page.objects.filter(parent__isnull=True).order_by('title')
+	pages = Page.tree.all()#.filter(parent__isnull=True).order_by('title')
 	
 	# set the permalinks
 	for page in pages:
 		page.permalink = make_permalink(page)
-		page.subpages = Page.objects.filter(parent__id=page.id).order_by('title')
-		for subpage in page.subpages:
-			subpage.permalink = make_permalink(subpage, prepend="%s/" % page.slug)
+		#for subpage in page.subpages:
+		#	subpage.permalink = make_permalink(subpage, prepend="%s/" % page.slug)
 	
 	return render_to_response('index.html', {'posts': p, 'pages': pages})
 	

@@ -1,4 +1,5 @@
 from django.db import models
+import mptt
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -11,13 +12,12 @@ class Page(models.Model):
 	updated = models.DateTimeField('Date upated', auto_now=True, auto_now_add=True)
 	
 	author = models.ForeignKey(User)
-	parent = models.ForeignKey('self', null=True, blank=True)
+	parent = models.ForeignKey('self', related_name='children', null=True, blank=True)
 	
 	def __unicode__(self):
-		if self.parent:
-			return "- %s" % self.title
-		else:
-			return self.title
+		return "%s %s" % ("-" * self.level, self.title)
 		
 	class Meta:
 		db_table = 'juice_pages_page'
+
+mptt.register(Page)

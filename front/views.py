@@ -7,7 +7,7 @@ from juice.comments.models import Comment
 from juice.taxonomy.models import Term
 from juice.pages.models import Page
 
-import juice.front.breadcrumbs
+from juice.front.functions import make_permalink
 
 # homepage
 def index(request):
@@ -16,10 +16,10 @@ def index(request):
 	
 	# set the permalinks
 	for page in pages:
-		page.permalink = reverse('juice.front.views.page', kwargs={'page_slug': page.slug})
+		page.permalink = make_permalink(page)
 		page.subpages = Page.objects.filter(parent__id=page.id).order_by('title')
 		for subpage in page.subpages:
-			subpage.permalink = reverse('juice.front.views.route', kwargs={'slug': "%s/%s" % (page.slug, subpage.slug)})
+			subpage.permalink = make_permalink(subpage, prepend="%s/" % page.slug)
 	
 	return render_to_response('index.html', {'posts': p, 'pages': pages})
 	

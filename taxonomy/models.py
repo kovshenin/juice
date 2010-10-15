@@ -16,3 +16,5 @@ class Term(models.Model):
 		db_table = 'juice_taxonomy_term'
 		
 	permalink = None
+	def make_permalink(self):
+		self.permalink = juice.front.functions.get_permalink(self)

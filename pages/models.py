@@ -1,9 +1,9 @@
 from django.db import models
-import mptt
+from mptt.models import MPTTModel
 from django.contrib.auth.models import User
 
 # Create your models here.
-class Page(models.Model):
+class Page(MPTTModel):
 	title = models.CharField(max_length=255)
 	slug = models.SlugField(max_length=50)
 	content = models.TextField()
@@ -20,4 +20,4 @@ class Page(models.Model):
 	class Meta:
 		db_table = 'juice_pages_page'
 
-mptt.register(Page)
+#mptt.register(Page)

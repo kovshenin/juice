@@ -1,10 +1,10 @@
 # Taxonomy Module
 
 from django.db import models
-import mptt
+from mptt.models import MPTTModel
 
 # Create your models here.
-class Term(models.Model):
+class Term(MPTTModel):
 	taxonomy = models.CharField(max_length=255)
 	name = models.CharField(max_length=255)
 	slug = models.SlugField(max_length=50)
@@ -17,4 +17,4 @@ class Term(models.Model):
 	class Meta:
 		db_table = 'juice_taxonomy_term'
 
-mptt.register(Term)
+#mptt.register(Term)

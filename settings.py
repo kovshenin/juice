@@ -82,5 +82,6 @@ INSTALLED_APPS = (
 	'juice.front',
 	'juice.news',
 	'juice.pages',
-	'juice.comments'
+	'juice.comments',
+	'juice.taxonomy',
 )

@@ -4,9 +4,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 
-if 'juice.taxonomy' in settings.INSTALLED_APPS:
-	from juice.taxonomy.models import Term
-	
 # Create your models here.
 class Post(models.Model):
 	title = models.CharField(max_length=255)
@@ -17,11 +14,13 @@ class Post(models.Model):
 	updated = models.DateTimeField('Date upated', auto_now=True, auto_now_add=True)
 	author = models.ForeignKey(User)
 	
-	if 'juice.taxonomy' in settings.INSTALLED_APPS:
-		terms = models.ManyToManyField(Term, blank=True)
-	
 	def __unicode__(self):
 		return self.title
 		
 	class Meta:
 		db_table = 'juice_news_post'
+
+	# Compatibility
+	if 'juice.taxonomy' in settings.INSTALLED_APPS:
+		from juice.taxonomy.models import Term
+		terms = models.ManyToManyField(Term, blank=True)

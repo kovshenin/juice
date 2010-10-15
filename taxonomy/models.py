@@ -14,3 +14,5 @@ class Term(models.Model):
 
 	class Meta:
 		db_table = 'juice_taxonomy_term'
+		
+	permalink = None

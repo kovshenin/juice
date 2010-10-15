@@ -1,3 +1,4 @@
+{% load taxonomy %}
 news-single.html
 
 <p>This shows a single post from the News module</p>
@@ -6,7 +7,7 @@ news-single.html
 	<strong>{{post.title}}</strong><br />
 	<em>{{post.published}}</em><br />
 	{{post.content}}<br /><br />
-	Published by {{post.author}} in the {% for category in post.categories %} <a href="{{category.permalink}}">{{category.name}}</a>, {% endfor %} and tagged {% for tag in post.tags %} <a href="{{tag.permalink}}">{{tag}}</a>, {% endfor %}
+	Published by {{post.author}} in the following categories: {% taxonomy_categories post.terms %} and tagged {% taxonomy_tags post.terms %}<br />
 </p>
 
 <p>

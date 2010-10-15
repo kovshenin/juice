@@ -10,5 +10,11 @@ index.html
 </p>
 {% endfor %}
 
-<p>And here are some pages:</p>
+<p><strong>And here are some pages:</strong></p>
 {% include "snippets/pages_tree.html" %}
+
+<p><strong>Here are the available categories for posts:</strong></p>
+{% include "snippets/taxonomy_categories_tree.html" %}
+
+<p><strong>And here are the tags:</strong></p>
+<p>{% for tag in tags %}<a href="{{tag.permalink}}">{{tag.name}}</a>, {% endfor %}</p>

@@ -1,1 +1,3 @@
-Juice
+Requires:
+	django-mptt
+	python-mysqldb

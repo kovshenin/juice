@@ -1,6 +1,7 @@
 # Taxonomy Module
 
 from django.db import models
+import mptt
 
 # Create your models here.
 class Term(models.Model):
@@ -8,13 +9,12 @@ class Term(models.Model):
 	name = models.CharField(max_length=255)
 	slug = models.SlugField(max_length=50)
 	description = models.TextField(blank=True)
-	
+	parent = models.ForeignKey('self', related_name='children', null=True, blank=True)
+
 	def __unicode__(self):
 		return self.name
 
 	class Meta:
 		db_table = 'juice_taxonomy_term'
-		
-	permalink = None
-	def make_permalink(self):
-		self.permalink = juice.front.functions.get_permalink(self)
+
+mptt.register(Term)

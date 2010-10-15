@@ -71,6 +71,7 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
 	'/home/kovshenin/Juice/juice/front/templates',
 	'/home/kovshenin/Juice/juice/pages/templates',
+	'/home/kovshenin/Juice/juice/taxonomy/templates',
 )
 
 INSTALLED_APPS = (

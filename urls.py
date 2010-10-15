@@ -16,4 +16,5 @@ urlpatterns = patterns('',
 	(r'^admin/', include(admin.site.urls)),
 )
 
+# get additional url patterms from juice.front
 urlpatterns += get_patterns()

@@ -56,14 +56,17 @@ def tag(request, tag_slug):
 	return render_to_response('news-list.html', {'posts': p, 'tag': t})
 
 # single page view
-def page(request, page_slug):
-	p = Page.objects.get(slug=page_slug)
+def page(request, page_slug, page_id=False):
+	if page_id:
+		p = Page.objects.get(id=page_id)
+	else:
+		p = Page.objects.get(slug=page_slug)
 	return render_to_response('page.html', {'page': p})
 
 # This function routes all requests that didn't match any regex
 def route(request, slug):
 	slugs = slug.split('/')
-	
+
 	# remove double slashes
 	i = 0
 	while '' in slugs:
@@ -74,6 +77,7 @@ def route(request, slug):
 	if i > 0:
 		return HttpResponseRedirect('/%s/' % '/'.join(slugs))
 	
+	
 	# otherwise check if the parent/child is okay	
 	parent = Page.objects.get(slug=slugs.pop(0), parent__id__isnull=True)
 	
@@ -81,5 +85,7 @@ def route(request, slug):
 		p = Page.objects.get(slug=page_slug, parent__id=parent.id)
 		parent = p
 		
+	last_child = parent
+		
 	# redirect to the page view if everything's fine otherwise an exception is thrown
-	return page(request, parent.slug)
+	return page(request, last_child.slug, page_id=last_child.id)

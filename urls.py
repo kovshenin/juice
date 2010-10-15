@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import *
+from juice.front.permalinks import get_patterns
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -13,10 +14,6 @@ urlpatterns = patterns('',
 
 	# Uncomment the next line to enable the admin:
 	(r'^admin/', include(admin.site.urls)),
-	(r'^$', 'juice.front.views.index'),
-	(r'^posts/(?P<post_slug>[-\w]+)/$', 'juice.front.views.single'),
-	(r'^category/(?P<category_slug>[-\w/]+)/$', 'juice.front.views.category'),
-	(r'^tag/(?P<tag_slug>[-\w]+)/$', 'juice.front.views.tag'),
-	(r'^(?P<slug>[-\w\/]+)/$', 'juice.front.views.route'),
-	(r'^(?P<page_slug>[-\w]+)/$', 'juice.front.views.page'),
 )
+
+urlpatterns += get_patterns()

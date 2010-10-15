@@ -6,7 +6,7 @@ news-single.html
 <p>
 	<strong>{{post.title}}</strong><br />
 	<em>{{post.published}}</em><br />
-	{{post.content}}<br /><br />
+	{{post.content|safe}}<br /><br />
 	Published by {{post.author}} in the following categories: {% taxonomy_categories post.terms %} and tagged {% taxonomy_tags post.terms %}<br />
 </p>
 

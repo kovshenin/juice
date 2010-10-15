@@ -7,7 +7,7 @@ from juice.comments.models import Comment
 from juice.taxonomy.models import Term
 from juice.pages.models import Page
 
-from juice.front.functions import make_permalink
+from juice.front.permalinks import make_permalink
 
 # homepage
 def index(request):

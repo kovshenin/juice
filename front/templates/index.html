@@ -6,7 +6,11 @@ index.html
 <p>
 	<strong><a href="{% url juice.front.views.single post.slug %}">{{post.title}}</a></strong><br />
 	<em>{{post.published}}</em><br />
-	{{post.excerpt}}
+	{% if post.excerpt %}
+		{{post.excerpt|striptags}}
+	{% else %}
+		{{post.content|truncatewords:5|striptags}}
+	{% endif %}
 </p>
 {% endfor %}
 

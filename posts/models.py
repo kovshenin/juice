@@ -1,4 +1,4 @@
-# News Module
+# Posts Module
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -18,4 +18,4 @@ class Post(models.Model):
 		return self.title
 		
 	class Meta:
-		db_table = 'juice_news_post'
+		db_table = 'juice_posts_post'

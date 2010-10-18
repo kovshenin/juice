@@ -1,27 +1,37 @@
 import datetime
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.template import RequestContext
 
-from juice.news.models import Post
+from juice.posts.models import Post
 from juice.comments.models import Comment, CommentForm
-from juice.taxonomy.models import Term
+from juice.taxonomy.models import Term, TermRelation
 from juice.pages.models import Page
 
 from juice.front.permalinks import make_permalink
 
 # homepage
-def index(request):
-	posts = Post.objects.all().order_by('-published')[:10]
+def index(request, page=1):
+	page = int(page)-1
+	
+	try:
+		posts = Post.objects.all().order_by('-published')[page:10]
+	except:
+		raise Http404
+	
+	# is there anything left?
+	if posts.count() == 0 & page > 0:
+		raise Http404
+
 	pages = Page.tree.all()
 	tags = Term.objects.filter(taxonomy="tag")
 	categories = Term.objects.filter(taxonomy="category")
 	
-	posts_ctype = ContentType.objects.get_for_model(posts[0])
+	posts_ctype = ContentType.objects.get_for_model(Post)
 	
 	# set the permalinks
 	for page in pages:
@@ -39,9 +49,20 @@ def index(request):
 # single post view
 def single(request, post_slug):
 	p = Post.objects.get(slug=post_slug)
-	p.permalink = make_permalink(p)
-	p.tags = p.terms.filter(taxonomy='tag')
-	p.categories = p.terms.filter(taxonomy='category')
+	ctype = ContentType.objects.get_for_model(p)
+	
+	
+	# read the relations with posts and terms
+	rel_tags = TermRelation.objects.filter(content_type__pk=ctype.id, object_id=p.id, term__taxonomy='tag')
+	rel_categories = TermRelation.objects.filter(content_type__pk=ctype.id, object_id=p.id, term__taxonomy='category')
+	
+	p.tags = []
+	p.categories = []
+
+	for tag in rel_tags:
+		p.tags.append(tag.term)
+	for category in rel_categories:
+		p.categories.append(category.term)
 	
 	# form processing
 	if request.method == 'POST':
@@ -63,13 +84,13 @@ def single(request, post_slug):
 		comment_form = CommentForm()
 	
 	# set the permalinks
+	p.permalink = make_permalink(p)
 	for c in p.categories:
 		c.permalink = make_permalink(c)
 	for t in p.tags:
 		t.permalink = make_permalink(t)
 		
-	# comments	
-	ctype = ContentType.objects.get_for_model(p)
+	# comments
 	p.comments = Comment.objects.filter(content_type__pk=ctype.id, object_id=p.id)
 	
 	for c in p.comments:

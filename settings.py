@@ -84,7 +84,8 @@ INSTALLED_APPS = (
 	'mptt',
 
 	'juice.front',
-	'juice.news',
+	#'juice.news',
+	'juice.posts',
 	'juice.pages',
 	'juice.comments',
 	'juice.taxonomy',

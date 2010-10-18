@@ -3,6 +3,9 @@
 from django.db import models
 from mptt.models import MPTTModel
 
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
+
 # Create your models here.
 class Term(MPTTModel):
 	taxonomy = models.CharField(max_length=255)
@@ -16,5 +19,15 @@ class Term(MPTTModel):
 
 	class Meta:
 		db_table = 'juice_taxonomy_term'
+		
+class TermRelation(models.Model):
+	# relations
+	term = models.ForeignKey(Term)
+	object_id = models.PositiveIntegerField()
+	content_type = models.ForeignKey(ContentType)
+	content_object = generic.GenericForeignKey()
+	
+	class Meta:
+		db_table = 'juice_taxonomy_relations'
 
 #mptt.register(Term)

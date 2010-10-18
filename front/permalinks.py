@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 def get_patterns():
 	return patterns('juice.front.views',
 		(r'^$', 'index'),
+		(r'^page/(?P<page>[\d]+)/$', 'index'),
 		(r'^posts/(?P<post_slug>[-\w]+)/$', 'single'),
 		(r'^category/(?P<category_slug>[-\w/]+)/$', 'category'),
 		(r'^tag/(?P<tag_slug>[-\w]+)/$', 'tag'),
@@ -14,7 +15,7 @@ def get_patterns():
 		(r'^(?P<page_slug>[-\w]+)/$', 'page'),
 	)
 
-from juice.news.models import Post
+from juice.posts.models import Post
 from juice.comments.models import Comment
 from juice.taxonomy.models import Term
 from juice.pages.models import Page

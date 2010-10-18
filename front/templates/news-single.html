@@ -3,16 +3,26 @@ news-single.html
 
 <p>This shows a single post from the News module</p>
 
+<h1><a href="{{post.permalink}}">{{post.title}}</a></h1>
 <p>
-	<strong>{{post.title}}</strong><br />
 	<em>{{post.published}}</em><br />
 	{{post.content|safe}}<br /><br />
-	Published by {{post.author}} in the following categories: {% taxonomy_categories post.terms %} and tagged {% taxonomy_tags post.terms %}<br />
+	Published by {{post.author}} in the following categories: {% taxonomy_list post.categories %} and tags: {% taxonomy_list post.tags %}<br />
 </p>
 
-<p>
-	<strong>Comments:</strong><br/>
+<h3>Comments ({{post.comments_count}}):</h3>
+<ul>
 	{% for comment in post.comments %}
-	<em>{{comment.author}}</em>: <small>{{comment.published}}</small> {{comment.content}}<br />
+	<li>
+		<img src="{{comment.avatar}}?s=50" /><strong><a href="{{comment.url}}">{{comment.name}}</a> ({{comment.twitter}})</strong> wrote:<br /><small>{{comment.published}}</small><p>{{comment.content}}</p>
+	</li>
 	{% endfor %}
+</ul>
+
+<p>
+	<form action="{{post.permalink}}" method="post">
+		<strong>Leave a comment:</strong><br />
+		{{comment_form}}
+		<input type="Submit" />
+	</form>
 </p>

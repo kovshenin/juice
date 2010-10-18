@@ -32,6 +32,10 @@ def make_permalink(object, prepend="", append=""):
 			object = parent
 			
 		return reverse('juice.front.views.route', kwargs={'slug': "%s%s" % (prepend, slug)})
+		
+	if isinstance(object, Post):
+		slug = object.slug
+		return reverse('juice.front.views.single', kwargs={'post_slug': slug})
 	
 	if isinstance(object, Term):
 		slug = object.slug

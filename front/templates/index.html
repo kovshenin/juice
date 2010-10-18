@@ -11,6 +11,7 @@ index.html
 	{% else %}
 		{{post.content|truncatewords:5|striptags}}
 	{% endif %}
+	<br /><small>Comments: {{post.comments_count}}</small>
 </p>
 {% endfor %}
 

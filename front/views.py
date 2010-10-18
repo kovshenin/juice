@@ -1,9 +1,14 @@
+import datetime
+
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User
+from django.template import RequestContext
 
 from juice.news.models import Post
-from juice.comments.models import Comment
+from juice.comments.models import Comment, CommentForm
 from juice.taxonomy.models import Term
 from juice.pages.models import Page
 
@@ -16,11 +21,14 @@ def index(request):
 	tags = Term.objects.filter(taxonomy="tag")
 	categories = Term.objects.filter(taxonomy="category")
 	
+	posts_ctype = ContentType.objects.get_for_model(posts[0])
+	
 	# set the permalinks
 	for page in pages:
 		page.permalink = make_permalink(page)
 	for post in posts:
 		post.permalink = make_permalink(post)
+		post.comments_count = Comment.objects.filter(content_type__pk=posts_ctype.id, object_id=post.id).count()
 	for tag in tags:
 		tag.permalink = make_permalink(tag)
 	for category in categories:
@@ -31,17 +39,46 @@ def index(request):
 # single post view
 def single(request, post_slug):
 	p = Post.objects.get(slug=post_slug)
+	p.permalink = make_permalink(p)
 	p.tags = p.terms.filter(taxonomy='tag')
 	p.categories = p.terms.filter(taxonomy='category')
 	
+	# form processing
+	if request.method == 'POST':
+		comment_form = CommentForm(request.POST)
+		if comment_form.is_valid():
+			comment = Comment(
+				name=comment_form.cleaned_data['name'],
+				email=comment_form.cleaned_data['email'],
+				url=comment_form.cleaned_data['url'],
+				twitter=comment_form.cleaned_data['twitter'],
+				content=comment_form.cleaned_data['content'],
+				author=User.objects.get(id=1),
+				published=datetime.datetime.now(),
+				content_object=p
+			)
+			comment.save()
+			comment_form = CommentForm()
+	else:
+		comment_form = CommentForm()
+	
 	# set the permalinks
 	for c in p.categories:
-		c.permalink = reverse('juice.front.views.category', kwargs={'category_slug': c.slug})
+		c.permalink = make_permalink(c)
 	for t in p.tags:
-		t.permalink = reverse('juice.front.views.tag', kwargs={'tag_slug': t.slug})
+		t.permalink = make_permalink(t)
 		
-	p.comments = Comment.objects.filter(post=p.id).order_by('-published')
-	return render_to_response('news-single.html', {'post': p})
+	# comments	
+	ctype = ContentType.objects.get_for_model(p)
+	p.comments = Comment.objects.filter(content_type__pk=ctype.id, object_id=p.id)
+	
+	for c in p.comments:
+		c.permalink = make_permalink(c)
+		c.populate()
+	
+	p.comments_count = p.comments.count()
+	
+	return render_to_response('news-single.html', {'post': p, 'comment_form': comment_form}, context_instance=RequestContext(request))
 	
 # view by category
 def category(request, category_slug):

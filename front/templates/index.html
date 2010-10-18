@@ -1,3 +1,4 @@
+{% load taxonomy %}
 index.html
 
 <p>This page will contain a list of all posts and their excerpts (News Module):</p>
@@ -23,3 +24,9 @@ index.html
 
 <p><strong>And here are the tags:</strong></p>
 <p>{% for tag in tags %}<a href="{{tag.permalink}}">{{tag.name}}</a>, {% endfor %}</p>
+
+<p><strong>Here's a tag cloud:</strong></p>
+<p>{% taxonomy_cloud tags %}</p>
+
+<p><strong>Here's a categories cloud:</strong></p>
+<p>{% taxonomy_cloud categories %}</p>

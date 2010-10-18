@@ -1,15 +1,46 @@
 from django import template
-from juice.taxonomy.models import Term
-from juice.news.models import Post
+from juice.taxonomy.models import Term, TermRelation
 
 register = template.Library()
 
 @register.tag
 def taxonomy_list(parser, token):
 	tag_name, terms = token.split_contents()
-	return TaxonomyNode(terms)
+	return TaxonomyListNode(terms)
 	
-class TaxonomyNode(template.Node):
+@register.tag
+def taxonomy_cloud(parser, token):
+	tag_name, terms = token.split_contents()
+	return TaxonomyCloudNode(terms)
+	
+class TaxonomyCloudNode(template.Node):
+	def __init__(self, terms):
+		self.terms = template.Variable(terms)
+	def render(self, context):
+		terms = self.terms.resolve(context)
+		cloud = []
+		counts = []
+		
+		# count the terms usage @todo permalinks
+		for term in terms:
+			term.count = TermRelation.objects.filter(term__id=term.id).count()
+			counts.append(term.count)
+			
+		maximum = max(counts)
+		minimum = min(counts)
+		count = terms.count()
+		
+		min_font_size = 15
+		max_font_size = 20
+		spread = maximum - minimum		
+		
+		for term in terms:
+			font_size = min_font_size + (term.count - minimum) * (max_font_size - min_font_size) / spread
+			cloud.append('<a style="font-size: %spx" title="%s has been used %s times">%s</a>' % (font_size, term.name, term.count, term.name))
+		
+		return ", ".join(cloud)
+	
+class TaxonomyListNode(template.Node):
 	def __init__(self, terms):
 		self.terms = template.Variable(terms)
 	def render(self, context):

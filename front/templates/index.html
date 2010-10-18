@@ -1,7 +1,8 @@
 {% load taxonomy %}
+{% load posts %}
 index.html
 
-<p>This page will contain a list of all posts and their excerpts (News Module):</p>
+<p>This page will contain a list of all posts and their excerpts (Posts Module):</p>
 
 {% for post in posts %}
 <p>
@@ -30,3 +31,15 @@ index.html
 
 <p><strong>Here's a categories cloud:</strong></p>
 <p>{% taxonomy_cloud categories %}</p>
+
+<p><strong>Here's a monthly post archive:</strong></p>
+<p>{% posts_archive monthly %}</p>
+
+<p><strong>Here's a yearly post archive:</strong></p>
+<p>{% posts_archive yearly %}</p>
+
+<p><strong>And of course a daily archive:</strong></p>
+<p>{% posts_archive daily %}</p>
+
+
+

@@ -5,7 +5,7 @@ index.html
 
 {% for post in posts %}
 <p>
-	<strong><a href="{% url juice.front.views.single post.slug %}">{{post.title}}</a></strong><br />
+	<strong><a href="{{post.permalink}}">{{post.title}}</a></strong><br />
 	<em>{{post.published}}</em><br />
 	{% if post.excerpt %}
 		{{post.excerpt|striptags}}

@@ -25,6 +25,9 @@ class Comment(models.Model):
 	object_id = models.PositiveIntegerField()
 	content_type = models.ForeignKey(ContentType)
 	content_object = generic.GenericForeignKey()
+	
+	def __unicode__(self):
+		return '%s: "%s" on %s' % (self.name, self.content[:20], self.content_object.title)
 
 	class Meta:
 		db_table = 'juice_comments_comment'

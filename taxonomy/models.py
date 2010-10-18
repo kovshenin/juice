@@ -15,7 +15,7 @@ class Term(MPTTModel):
 	parent = models.ForeignKey('self', related_name='children', null=True, blank=True)
 
 	def __unicode__(self):
-		return self.name
+		return "%s (%s)" % (self.name, self.taxonomy)
 
 	class Meta:
 		db_table = 'juice_taxonomy_term'
@@ -26,6 +26,9 @@ class TermRelation(models.Model):
 	object_id = models.PositiveIntegerField()
 	content_type = models.ForeignKey(ContentType)
 	content_object = generic.GenericForeignKey()
+	
+	def __unicode__(self):
+		return "%s -- %s" % (self.term.name, self.content_object.title)
 	
 	class Meta:
 		db_table = 'juice_taxonomy_relations'

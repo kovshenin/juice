@@ -1,3 +1,15 @@
+"""
+	Usage: 
+		1. {% taxonomy_list terms %}
+		2. {% taxonomy_cloud terms %}
+		
+		Where "terms" is a list of juice.taxonomy.models.Term
+		
+	Outputs:
+		1. A list of comma-separated terms with links to them
+		2. A cloud of terms (useful for tag clouds)
+"""
+
 from django import template
 from juice.taxonomy.models import Term, TermRelation
 

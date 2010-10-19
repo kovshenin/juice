@@ -45,4 +45,4 @@ class CommentForm(forms.Form):
 	url = forms.URLField(max_length=255)
 	twitter = forms.CharField(max_length=100)
 	content = forms.CharField(required=True, widget=forms.Textarea)
-	parent = forms.CharField(max_length=100)
+	parent = forms.CharField(required=False, max_length=100)

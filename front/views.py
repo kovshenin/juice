@@ -93,7 +93,7 @@ def single(request, post_slug):
 		t.permalink = make_permalink(t)
 		
 	# comments
-	p.comments = Comment.objects.filter(content_type__pk=ctype.id, object_id=p.id)
+	p.comments = Comment.tree.filter(content_type__pk=ctype.id, object_id=p.id)
 	
 	for c in p.comments:
 		c.permalink = make_permalink(c)

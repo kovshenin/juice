@@ -32,5 +32,16 @@ class TermRelation(models.Model):
 	
 	class Meta:
 		db_table = 'juice_taxonomy_relations'
+		
+	@staticmethod
+	def get_objects(model=None, taxonomy=None, term_id=None):
+		data = {
+			'posts': model._meta.db_table,
+			'relations': TermRelation._meta.db_table,
+			'terms': Term._meta.db_table,
+			'term_id': term_id
+		}
+
+		return model.objects.raw('SELECT %(posts)s.* FROM %(posts)s JOIN %(relations)s ON %(posts)s.id = %(relations)s.object_id JOIN %(terms)s ON %(relations)s.term_id = %(terms)s.id WHERE %(terms)s.id = %(term_id)s ORDER BY %(posts)s.published DESC' % data)
 
 #mptt.register(Term)

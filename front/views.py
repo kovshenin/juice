@@ -49,7 +49,7 @@ def index(request, page=1):
 # single post view
 def single(request, post_slug):
 	p = Post.objects.get(slug=post_slug)
-	ctype = ContentType.objects.get_for_model(p)
+	ctype = ContentType.objects.get_for_model(Post)
 	
 	
 	# read the relations with posts and terms
@@ -101,17 +101,27 @@ def single(request, post_slug):
 	
 	return render_to_response('news-single.html', {'post': p, 'comment_form': comment_form}, context_instance=RequestContext(request))
 	
-# view by category
-def category(request, category_slug):
-	c = Term.objects.get(slug=category_slug, taxonomy='category')
-	p = Post.objects.filter(terms__id=c.id)
-	return render_to_response('news-list.html', {'posts': p, 'category': c})
+# view posts by category
+def category(request, category_slug, page=1):
+	page = int(page)-1
+	
+	posts = []
+	ctype = ContentType.objects.get_for_model(Post)
+	category = Term.objects.get(slug=category_slug, taxonomy='category')
+
+	posts = TermRelation.get_objects(model=Post, taxonomy='category', term_id=category.id)
+	return render_to_response('news-list.html', {'posts': posts, 'category': category})
 
 # view by tag
-def tag(request, tag_slug):
-	t = Term.objects.get(slug=tag_slug, taxonomy='tag')
-	p = Post.objects.filter(terms__id=t.id)
-	return render_to_response('news-list.html', {'posts': p, 'tag': t})
+def tag(request, tag_slug, page=1):
+	page = int(page)-1
+	
+	posts = []
+	ctype = ContentType.objects.get_for_model(Post)
+	tag = Term.objects.get(slug=tag_slug, taxonomy='tag')
+	
+	posts = TermRelation.get_objects(model=Post, taxonomy='tag', term_id=tag.id)
+	return render_to_response('news-list.html', {'posts': posts, 'tag': tag})
 
 # single page view
 def page(request, page_slug, page_id=False):

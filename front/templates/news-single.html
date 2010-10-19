@@ -13,8 +13,8 @@ news-single.html
 <h3>Comments ({{post.comments_count}}):</h3>
 <ul>
 	{% for comment in post.comments %}
-	<li>
-		<img src="{{comment.avatar}}?s=50" /><strong><a href="{{comment.url}}">{{comment.name}}</a> ({{comment.twitter}})</strong> wrote:<br /><small>{{comment.published}}</small><p>{{comment.content}}</p>
+	<li style="margin-left: {{comment.indent}}px">
+		<img src="{{comment.avatar}}?s=50" /><small>{{comment.id}}</small><strong><a href="{{comment.url}}">{{comment.name}}</a> ({{comment.twitter}})</strong> wrote:<br /><small>{{comment.published}}</small><p>{{comment.content}}</p>
 	</li>
 	{% endfor %}
 </ul>

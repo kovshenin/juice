@@ -76,8 +76,10 @@ def single(request, post_slug):
 				content=comment_form.cleaned_data['content'],
 				author=User.objects.get(id=1),
 				published=datetime.datetime.now(),
+				parent=Comment.objects.get(id=int(comment_form.cleaned_data['parent'])),
 				content_object=p
 			)
+			
 			comment.save()
 			comment_form = CommentForm()
 	else:
@@ -95,6 +97,7 @@ def single(request, post_slug):
 	
 	for c in p.comments:
 		c.permalink = make_permalink(c)
+		c.indent = c.level * 50
 		c.populate()
 	
 	p.comments_count = p.comments.count()

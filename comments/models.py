@@ -1,4 +1,5 @@
 # Comments Module
+from mptt.models import MPTTModel
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -12,7 +13,7 @@ if 'juice.news' in settings.INSTALLED_APPS:
 	from juice.news.models import Post
 
 # Create your models here.
-class Comment(models.Model):
+class Comment(MPTTModel):
 	name = models.CharField(max_length=255)
 	email = models.CharField(max_length=255)
 	url = models.CharField(max_length=255)
@@ -21,6 +22,7 @@ class Comment(models.Model):
 	published = models.DateTimeField('Date published')
 	updated = models.DateTimeField('Date upated', auto_now=True, auto_now_add=True)
 	author = models.ForeignKey(User, blank=True, null=True)
+	parent = models.ForeignKey('self', related_name='children', null=True, blank=True)
 
 	object_id = models.PositiveIntegerField()
 	content_type = models.ForeignKey(ContentType)
@@ -43,3 +45,4 @@ class CommentForm(forms.Form):
 	url = forms.URLField(max_length=255)
 	twitter = forms.CharField(max_length=100)
 	content = forms.CharField(required=True, widget=forms.Textarea)
+	parent = forms.CharField(max_length=100)

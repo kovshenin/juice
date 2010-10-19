@@ -109,7 +109,7 @@ def category(request, category_slug, page=1):
 	ctype = ContentType.objects.get_for_model(Post)
 	category = Term.objects.get(slug=category_slug, taxonomy='category')
 
-	posts = TermRelation.get_objects(model=Post, taxonomy='category', term_id=category.id)
+	posts = TermRelation.get_objects_by_term_id(model=Post, taxonomy='category', term_id=category.id, order_by='published DESC')
 	return render_to_response('news-list.html', {'posts': posts, 'category': category})
 
 # view by tag
@@ -120,7 +120,7 @@ def tag(request, tag_slug, page=1):
 	ctype = ContentType.objects.get_for_model(Post)
 	tag = Term.objects.get(slug=tag_slug, taxonomy='tag')
 	
-	posts = TermRelation.get_objects(model=Post, taxonomy='tag', term_id=tag.id)
+	posts = TermRelation.get_objects_by_term_id(model=Post, taxonomy='tag', term_id=tag.id, order_by='published DESC')
 	return render_to_response('news-list.html', {'posts': posts, 'tag': tag})
 
 # single page view

@@ -7,7 +7,7 @@ class Form(models.Model):
 	title = models.CharField(max_length=255)
 	slug = models.SlugField(max_length=50)
 
-	published = models.DateTimeField('Date published')
+	published = models.DateTimeField('Date published', auto_now_add=True)
 	updated = models.DateTimeField('Date upated', auto_now=True, auto_now_add=True)
 	
 	author = models.ForeignKey(User)
@@ -48,15 +48,28 @@ class Form(models.Model):
 		form_fields = FormField.objects.filter(form__id=form.id)
 
 		class _FutureForm(forms.Form):
+			title = form.title
 			def __init__(self, *args, **kwargs):
 				super(_FutureForm, self).__init__(*args, **kwargs)
 				for field in form_fields:
-					if field.type == 'i':
+					if field.type == 'i': # Input
 						self.fields[field.name] = forms.CharField(max_length=255, required=field.required, label=field.caption)
-					elif field.type == 't':
+					elif field.type == 'e': # E-mail
+						self.fields[field.name] = forms.EmailField(max_length=255, required=field.required, label=field.caption)
+					elif field.type == 't': # Textarea
 						self.fields[field.name] = forms.CharField(max_length=3000, required=field.required, widget=forms.Textarea, label=field.caption)
-					elif field.type == 'c':
+					elif field.type == 'c': # Checkbox
 						self.fields[field.name] = forms.BooleanField(label=field.caption, required=field.required)
+					elif field.type == 's': # Selectbox
+						field_choices = []
+						for attr in field.attributes.split("\n"):
+							field_choices.append(attr.split(":"))
+						self.fields[field.name] = forms.ChoiceField(choices=field_choices)
+					elif field.type == 'r': # Radio
+						field_choices = []
+						for attr in field.attributes.split("\n"):
+							field_choices.append(attr.split(":"))
+						self.fields[field.name] = forms.ChoiceField(choices=field_choices, required=field.required, widget=forms.RadioSelect)
 
 		return _FutureForm
 
@@ -65,12 +78,14 @@ class FormField(models.Model):
 	caption = models.CharField(max_length=255)
 	type = models.CharField(max_length=1, choices=(
 		('i', 'Input'),
+		('e', 'E-mail'),
 		('t', 'Textarea'),
 		('s', 'Selectbox'),
 		('c', 'Checkbox'),
 		('r', 'Radio')
 	))
-	default_value = models.CharField(max_length=255, blank=True)
+	attributes = models.TextField(blank=True)
+	default_value = models.TextField(blank=True)
 	required = models.BooleanField()
 
 	form = models.ForeignKey(Form)

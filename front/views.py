@@ -76,9 +76,14 @@ def single(request, post_slug):
 				content=comment_form.cleaned_data['content'],
 				author=User.objects.get(id=1),
 				published=datetime.datetime.now(),
-				parent=Comment.objects.get(id=int(comment_form.cleaned_data['parent'])),
 				content_object=p
 			)
+			
+			try:
+				parent_comment = Comment.objects.get(id=int(comment_form.cleaned_data['parent']))
+				comment.parent = parent_comment
+			except:
+				pass
 			
 			comment.save()
 			comment_form = CommentForm()

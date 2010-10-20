@@ -37,12 +37,13 @@ class TermRelation(models.Model):
 	def get_objects_by_term_id(model=None, taxonomy=None, term_id=None, order_by='NULL'):
 		data = {
 			'objects': model._meta.db_table,
+			'content_type': ContentType.objects.get_for_model(model).id,
 			'relations': TermRelation._meta.db_table,
 			'terms': Term._meta.db_table,
 			'term_id': term_id,
 			'order_by': ' ORDER BY %s ' % order_by
 		}
 
-		return model.objects.raw('SELECT %(objects)s.* FROM %(objects)s JOIN %(relations)s ON %(objects)s.id = %(relations)s.object_id JOIN %(terms)s ON %(relations)s.term_id = %(terms)s.id WHERE %(terms)s.id = %(term_id)s %(order_by)s' % data)
+		return model.objects.raw('SELECT %(objects)s.* FROM %(objects)s JOIN %(relations)s ON %(objects)s.id = %(relations)s.object_id AND %(relations)s.content_type_id = %(content_type)s JOIN %(terms)s ON %(relations)s.term_id = %(terms)s.id WHERE %(terms)s.id = %(term_id)s %(order_by)s' % data)
 
 #mptt.register(Term)

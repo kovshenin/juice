@@ -18,7 +18,7 @@ index.html
 {% endfor %}
 
 <h3>Here's a contact form:</h3>
-<form action="{% url front.views.index %}" method="POST">
+<form action="{% url front.views.index %}" method="POST" enctype="multipart/form-data">
 {{contact_form}}
 <input type="submit" />
 </form>

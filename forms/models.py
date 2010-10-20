@@ -69,7 +69,9 @@ class Form(models.Model):
 						field_choices = []
 						for attr in field.attributes.split("\n"):
 							field_choices.append(attr.split(":"))
-						self.fields[field.name] = forms.ChoiceField(choices=field_choices, required=field.required, widget=forms.RadioSelect)
+						self.fields[field.name] = forms.ChoiceField(choices=field_choices, required=field.required, widget=forms.RadioSelect, label=field.caption)
+					elif field.type == 'f': # File
+						self.fields[field.name] = forms.FileField(label=field.caption, required=field.required)
 
 		return _FutureForm
 
@@ -82,7 +84,8 @@ class FormField(models.Model):
 		('t', 'Textarea'),
 		('s', 'Selectbox'),
 		('c', 'Checkbox'),
-		('r', 'Radio')
+		('r', 'Radio'),
+		('f', 'File Attachment'),
 	))
 	attributes = models.TextField(blank=True)
 	default_value = models.TextField(blank=True)

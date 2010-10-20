@@ -1,4 +1,5 @@
 import datetime
+import os.path
 
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response, get_object_or_404
@@ -49,6 +50,14 @@ def index(request, page=1):
 	if request.method == 'POST':
 		contact_form = ContactForm(request.POST)
 		if contact_form.is_valid():
+			
+			# Save the uploaded file
+			cv = request.FILES['cv']
+			dest = open(cv.name, 'wb+')
+			for chunk in cv.chunks():
+				dest.write(chunk)
+			dest.close()
+			
 			contact_form = ContactForm()
 	else:
 		contact_form = ContactForm()	
@@ -162,15 +171,18 @@ def route(request, slug):
 	if i > 0:
 		return HttpResponseRedirect('/%s/' % '/'.join(slugs))
 
+	try:
+		# otherwise check if the parent/child is okay	
+		parent = Page.objects.get(slug=slugs.pop(0), parent__id__isnull=True)
 
-	# otherwise check if the parent/child is okay	
-	parent = Page.objects.get(slug=slugs.pop(0), parent__id__isnull=True)
+		for page_slug in slugs:
+			p = Page.objects.get(slug=page_slug, parent__id=parent.id)
+			parent = p
 
-	for page_slug in slugs:
-		p = Page.objects.get(slug=page_slug, parent__id=parent.id)
-		parent = p
-
-	last_child = parent
-		
-	# redirect to the page view if everything's fine otherwise an exception is thrown
-	return page(request, last_child.slug, page_id=last_child.id)
+		last_child = parent
+			
+		# redirect to the page view if everything's fine otherwise an exception is thrown
+		return page(request, last_child.slug, page_id=last_child.id)
+	
+	except:
+		raise Http404

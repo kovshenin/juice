@@ -19,48 +19,46 @@ class Form(models.Model):
 		db_table = 'juice_forms_form'
 		
 	@staticmethod
-	def get_form_by_id(form_id):
+	def create_form_by_id(form_id):
 		try:
 			form = Form.objects.get(id=form_id)
-			return Form.get_form(form)
+			return Form.create_form(form)
 		except:
 			pass
 		
 	@staticmethod
-	def get_form_by_title(form_title):
+	def create_form_by_title(form_title):
 		try:
 			form = Form.objects.get(title=form_title)
-			return Form.get_form(form)
+			return Form.create_form(form)
 		except:
 			pass
 		
 	@staticmethod
-	def get_form_by_slug(form_slug):
+	def create_form_by_slug(form_slug):
 		try:
 			form = Form.objects.get(slug=form_slug)
-			return Form.get_form(form)
+			return Form.create_form(form)
 		except:
 			pass
-		
+
 	@staticmethod
-	def get_form(form_object):
+	def create_form(form_object):
 		form = form_object
 		form_fields = FormField.objects.filter(form__id=form.id)
 
-		class NewForm(forms.Form):
-			pass
-			
-		new_form = NewForm()
-		
-		for field in form_fields:
-			if field.type == 'i':
-				new_form.fields[field.name] = forms.CharField(max_length=255, required=field.required, label=field.caption)
-			elif field.type == 't':
-				new_form.fields[field.name] = forms.CharField(max_length=3000, required=field.required, widget=forms.Textarea, label=field.caption)
-			elif field.type == 'c':
-				new_form.fields[field.name] = forms.BooleanField(label=field.caption)
-		
-		return new_form
+		class _FutureForm(forms.Form):
+			def __init__(self, *args, **kwargs):
+				super(_FutureForm, self).__init__(*args, **kwargs)
+				for field in form_fields:
+					if field.type == 'i':
+						self.fields[field.name] = forms.CharField(max_length=255, required=field.required, label=field.caption)
+					elif field.type == 't':
+						self.fields[field.name] = forms.CharField(max_length=3000, required=field.required, widget=forms.Textarea, label=field.caption)
+					elif field.type == 'c':
+						self.fields[field.name] = forms.BooleanField(label=field.caption, required=field.required)
+
+		return _FutureForm
 
 class FormField(models.Model):
 	name = models.SlugField(max_length=50)

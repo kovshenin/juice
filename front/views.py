@@ -44,9 +44,15 @@ def index(request, page=1):
 		tag.permalink = make_permalink(tag)
 	for category in categories:
 		category.permalink = make_permalink(category)
-		
-	contact_form = Form.get_form_by_slug('contact-form')
 	
+	ContactForm = Form.create_form_by_slug('contact-form')	
+	if request.method == 'POST':
+		contact_form = ContactForm(request.POST)
+		if contact_form.is_valid():
+			contact_form = ContactForm()
+	else:
+		contact_form = ContactForm()	
+
 	return render_to_response('index.html', {'posts': posts, 'pages': pages, 'tags': tags, 'categories': categories, 'contact_form': contact_form})
 	
 # single post view

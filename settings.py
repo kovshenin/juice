@@ -89,4 +89,5 @@ INSTALLED_APPS = (
 	'juice.pages',
 	'juice.comments',
 	'juice.taxonomy',
+	'juice.forms',
 )

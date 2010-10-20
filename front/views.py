@@ -11,6 +11,7 @@ from juice.posts.models import Post
 from juice.comments.models import Comment, CommentForm
 from juice.taxonomy.models import Term, TermRelation
 from juice.pages.models import Page
+from juice.forms.models import Form
 
 from juice.front.permalinks import make_permalink
 
@@ -43,8 +44,10 @@ def index(request, page=1):
 		tag.permalink = make_permalink(tag)
 	for category in categories:
 		category.permalink = make_permalink(category)
+		
+	contact_form = Form.get_form_by_slug('contact-form')
 	
-	return render_to_response('index.html', {'posts': posts, 'pages': pages, 'tags': tags, 'categories': categories})
+	return render_to_response('index.html', {'posts': posts, 'pages': pages, 'tags': tags, 'categories': categories, 'contact_form': contact_form})
 	
 # single post view
 def single(request, post_slug):
@@ -148,19 +151,19 @@ def route(request, slug):
 	while '' in slugs:
 		i += 1
 		slugs.remove('')
-		
+
 	# redirect to the clean URL
 	if i > 0:
 		return HttpResponseRedirect('/%s/' % '/'.join(slugs))
-	
-	
+
+
 	# otherwise check if the parent/child is okay	
 	parent = Page.objects.get(slug=slugs.pop(0), parent__id__isnull=True)
-	
+
 	for page_slug in slugs:
 		p = Page.objects.get(slug=page_slug, parent__id=parent.id)
 		parent = p
-		
+
 	last_child = parent
 		
 	# redirect to the page view if everything's fine otherwise an exception is thrown

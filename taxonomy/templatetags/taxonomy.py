@@ -44,7 +44,9 @@ class TaxonomyCloudNode(template.Node):
 		
 		min_font_size = 15
 		max_font_size = 20
-		spread = maximum - minimum		
+		spread = maximum - minimum
+		if spread == 0:
+			spread = 1
 		
 		for term in terms:
 			font_size = min_font_size + (term.count - minimum) * (max_font_size - min_font_size) / spread

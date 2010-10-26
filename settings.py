@@ -90,4 +90,5 @@ INSTALLED_APPS = (
 	'juice.comments',
 	'juice.taxonomy',
 	'juice.forms',
+	'juice.analytics',
 )

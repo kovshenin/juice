@@ -20,7 +20,10 @@ from juice.comments.models import Comment
 from juice.taxonomy.models import Term
 from juice.pages.models import Page
 
-def make_permalink(object, prepend="", append=""):
+def make_permalink(object=None, prepend="", append=""):
+	if object == None:
+		return reverse('juice.front.views.index')
+	
 	if isinstance(object, Page):
 		slug = object.slug
 

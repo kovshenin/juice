@@ -1,0 +1,76 @@
+/* ----------------------------------------------------------------------------------------------------------
+
+    Output device: screen, projection
+
+    Author:     Nuvio (www.nuvio.cz)
+    Update:     2008-07-29, 18:30 GMT+1
+    Version:    2.2.6 (2008-07-13, 14:28 GMT+1)
+
+    Structure:
+        display; position; z-index; float; clear; width; height; overflow; margin; padding; border; background; align; font;
+
+    Content:
+
+        1) HTML tags
+        2) HTML styles
+        3) Layout
+        4-1) Page: Homepage
+        5) Others
+
+---------------------------------------------------------------------------------------------------------- */
+
+/* ----------------------------------------------------------------------------------------------------------
+1) HTML tags
+---------------------------------------------------------------------------------------------------------- */
+
+body {background-color:#fff; color:#404040}
+
+a {color:#404040;}
+a:hover {color:#000;}
+
+/* ----------------------------------------------------------------------------------------------------------
+2) HTML styles
+---------------------------------------------------------------------------------------------------------- */
+
+/* ----------------------------------------------------------------------------------------------------------
+3) Layout
+---------------------------------------------------------------------------------------------------------- */
+
+    #nav span {color:#DDD;}
+    #nav #nav-active {color:#090;}
+
+    #tray {background-color:#BFBFBF;}
+    #tray li a {color:#404040;}
+    #tray li#tray-active a {background-color:#090; color:#FFF;}
+    #tray li a:hover {background-color:#9F9F9F; color:#FFF;}
+
+        #search #search-input {background-color:#FFF;}
+        #search #search-input input {color:#404040;}
+
+    #footer, #footer a {color:#9f9f9f;}
+    #footer a:hover {color:#404040;}
+
+/* ----------------------------------------------------------------------------------------------------------
+4-1) Page: Homepage
+---------------------------------------------------------------------------------------------------------- */
+
+#col-top, #col-bottom, #col {background-color:#F5F5F5;}
+
+#cols3 .col h3 {background-color:#EEF8E4; color:#090;}
+#cols3 .col h3 a {color:#090;}
+#cols3 .col h3 a:hover {color:#000;}
+#cols3 .col-more {background:#F5F5F5;}
+
+#cols2 #col-left .title h4, #cols2 #col-right h4 {color:#090;}
+#cols2 #col-left .title h4, #cols2 #col-left .title span {background-color:#FFF;}
+#cols2 #col-left .article {color:#090;}
+#cols2 #col-left a:hover.article {color:#000;}
+
+#cols2 #col-right {background-color:#EEF8E4;}
+#cols2 #col-right h4 span {background-color:#EEF8E4;}
+
+/* ----------------------------------------------------------------------------------------------------------
+5) Others
+---------------------------------------------------------------------------------------------------------- */
+
+.high {color:#090}

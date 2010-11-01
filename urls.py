@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import *
+from django.conf import settings
 from juice.front.permalinks import get_patterns
 
 # Uncomment the next two lines to enable the admin:
@@ -13,6 +14,7 @@ urlpatterns = patterns('',
 	# (r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
 	# Uncomment the next line to enable the admin:
+	(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 	(r'^admin/', include(admin.site.urls)),
 )
 

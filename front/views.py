@@ -62,7 +62,7 @@ def index(request, page=1):
 	else:
 		contact_form = ContactForm()	
 
-	return render_to_response('index.html', {'posts': posts, 'pages': pages, 'tags': tags, 'categories': categories, 'contact_form': contact_form})
+	return render('home.html', {'posts': posts, 'pages': pages, 'tags': tags, 'categories': categories, 'contact_form': contact_form})
 	
 # single post view
 def single(request, post_slug):
@@ -120,12 +120,11 @@ def single(request, post_slug):
 	
 	for c in p.comments:
 		c.permalink = make_permalink(c)
-		c.indent = c.level * 50
 		c.populate()
 	
 	p.comments_count = p.comments.count()
 	
-	return render_to_response('news-single.html', {'post': p, 'comment_form': comment_form}, context_instance=RequestContext(request))
+	return render('post.html', {'post': p, 'comment_form': comment_form}, context_instance=RequestContext(request))
 	
 # view posts by category
 def category(request, category_slug, page=1):
@@ -155,7 +154,7 @@ def page(request, page_slug, page_id=False):
 		p = Page.objects.get(id=page_id)
 	else:
 		p = Page.objects.get(slug=page_slug)
-	return render_to_response('page.html', {'page': p})
+	return render('page.html', {'page': p})
 
 # This function routes all requests that didn't match any regex
 def route(request, slug):
@@ -186,3 +185,40 @@ def route(request, slug):
 	
 	except:
 		raise Http404
+
+# The following function does render_to_response along with the global
+# variables used by the base template (base.html). This reduces
+# redundant code.
+def render(template_name, context={}, **kwargs):
+	main_menu = [
+		{'title': 'Home', 'permalink': make_permalink()}
+	]
+	pages = Page.tree.filter(parent__id=None)
+	# set the permalinks
+	for page in pages:
+		entry = {
+			'title': page.title,
+			'permalink': make_permalink(page)
+		}
+		main_menu.append(entry)
+		
+	main_menu.append({
+		'title': 'Contacts',
+		'permalink': '',
+	})
+		
+	context['global'] = {
+		'title': 'Juice',
+		'home': make_permalink(),
+		'navigation': {
+			'main': main_menu,
+			'tray': [
+				{'title': 'Home', 'permalink': make_permalink()},
+				{'title': 'Products', 'permalink': ''},
+				{'title': 'Services', 'permalink': ''},
+				{'title': 'Feedback', 'permalink': ''},
+			]
+		},
+	}
+	
+	return render_to_response(template_name, context, **kwargs)

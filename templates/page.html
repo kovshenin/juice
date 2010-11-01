@@ -1,10 +1,13 @@
-page.html
+{% extends "base.html" %}
+{% load chunks %}
 
-<p>This is the single page view template (Pages Module)</p>
-
-<p><strong>{{page.title}}</strong></p>
-<p>{{page.content}}</p>
-
-<p>{{page.hi}}</p>
-
-<p>{% for crumb in breadcrumbs %}<a href="#">{{crumb}}</a> &raquo; {% endfor %}</p>
+{% block title %}{{ page.title }}{% endblock %}
+{% block content %}
+    <!-- Promo -->
+    <div id="col-top"></div>
+    <div id="col" class="box">
+		<h1>{{ page.title }}</h1>
+		<p>{{ page.content|safe }}</p>
+    </div> <!-- /col -->
+    <div id="col-bottom"></div>
+{% endblock %}

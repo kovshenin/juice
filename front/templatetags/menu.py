@@ -21,6 +21,12 @@ class MenuActiveNode(template.Node):
 		request = self.request.resolve(context)
 		permalink = self.permalink.resolve(context)
 		
+		if permalink == '':
+			return ''
+			
+		if permalink == '/' and request.path != '/':
+			return ''
+		
 		import re
 		if re.search(permalink, request.path):
 			return 'active'

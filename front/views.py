@@ -218,6 +218,7 @@ def render(template_name, context={}, **kwargs):
 				{'title': 'Products', 'permalink': ''},
 				{'title': 'Services', 'permalink': ''},
 				{'title': 'Feedback', 'permalink': ''},
+				{'title': 'About', 'permalink': '/about/'},
 			]
 		},
 	}

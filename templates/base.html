@@ -41,7 +41,7 @@
 
         <ul>
 			{% for entry in global.navigation.tray %}
-				<li {% ifequal request.path entry.permalink %}id="tray-active"{% endifequal %}><a href="{{ entry.permalink }}">{{ entry.title }}</a></li>
+				<li class="{% menu_active request entry.permalink %}"><a href="{{ entry.permalink }}">{{ entry.title }}</a></li>
 			{% endfor %}
             <!--<li id="tray-active"><a href="#">Homepage</a></li> <!-- Active page -->-->
         </ul>

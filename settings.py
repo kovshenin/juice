@@ -84,11 +84,11 @@ INSTALLED_APPS = (
 	'mptt',
 
 	'juice.front',
-	#'juice.news',
 	'juice.posts',
 	'juice.pages',
 	'juice.comments',
 	'juice.taxonomy',
 	'juice.forms',
 	'juice.analytics',
+	'juice.chunks',
 )

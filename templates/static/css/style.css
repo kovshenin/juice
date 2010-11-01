@@ -37,11 +37,11 @@ a:hover {color:#000;}
 ---------------------------------------------------------------------------------------------------------- */
 
     #nav span {color:#DDD;}
-    #nav #nav-active {color:#090;}
+    #nav .active {color:#090;}
 
     #tray {background-color:#BFBFBF;}
     #tray li a {color:#404040;}
-    #tray li#tray-active a {background-color:#090; color:#FFF;}
+    #tray li.active a {background-color:#090; color:#FFF;}
     #tray li a:hover {background-color:#9F9F9F; color:#FFF;}
 
         #search #search-input {background-color:#FFF;}

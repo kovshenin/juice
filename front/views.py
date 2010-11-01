@@ -62,7 +62,7 @@ def index(request, page=1):
 	else:
 		contact_form = ContactForm()	
 
-	return render('home.html', {'posts': posts, 'pages': pages, 'tags': tags, 'categories': categories, 'contact_form': contact_form})
+	return render('home.html', {'posts': posts, 'pages': pages, 'tags': tags, 'categories': categories, 'contact_form': contact_form}, context_instance=RequestContext(request))
 	
 # single post view
 def single(request, post_slug):
@@ -135,7 +135,7 @@ def category(request, category_slug, page=1):
 	category = Term.objects.get(slug=category_slug, taxonomy='category')
 
 	posts = TermRelation.get_objects_by_term_id(model=Post, taxonomy='category', term_id=category.id, order_by='published DESC')
-	return render_to_response('news-list.html', {'posts': posts, 'category': category})
+	return render_to_response('news-list.html', {'posts': posts, 'category': category}, context_instance=RequestContext(request))
 
 # view by tag
 def tag(request, tag_slug, page=1):
@@ -146,7 +146,7 @@ def tag(request, tag_slug, page=1):
 	tag = Term.objects.get(slug=tag_slug, taxonomy='tag')
 	
 	posts = TermRelation.get_objects_by_term_id(model=Post, taxonomy='tag', term_id=tag.id, order_by='published DESC')
-	return render_to_response('news-list.html', {'posts': posts, 'tag': tag})
+	return render_to_response('news-list.html', {'posts': posts, 'tag': tag}, context_instance=RequestContext(request))
 
 # single page view
 def page(request, page_slug, page_id=False):
@@ -154,7 +154,7 @@ def page(request, page_slug, page_id=False):
 		p = Page.objects.get(id=page_id)
 	else:
 		p = Page.objects.get(slug=page_slug)
-	return render('page.html', {'page': p})
+	return render('page.html', {'page': p}, context_instance=RequestContext(request))
 
 # This function routes all requests that didn't match any regex
 def route(request, slug):
@@ -198,11 +198,12 @@ def render(template_name, context={}, **kwargs):
 	for page in pages:
 		entry = {
 			'title': page.title,
-			'permalink': make_permalink(page)
+			'permalink': make_permalink(page),
 		}
 		main_menu.append(entry)
 		
 	main_menu.append({
+		'name': 'contacts',
 		'title': 'Contacts',
 		'permalink': '',
 	})

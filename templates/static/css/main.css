@@ -50,14 +50,14 @@ ul.ul-list span.date {padding-right:10px;}
     
         #nav {position:absolute; top:80px; right:20px; margin:0;}
         #nav span {margin:0 8px;}
-        #nav #nav-active {font-weight:bold; text-decoration:none;}
+        #nav .active {font-weight:bold; text-decoration:none;}
     
     #tray {position:relative; width:960px; height:45px; background:url("../design/tray.gif") 0 0 no-repeat; overflow:hidden; font:bold 90%/1 "tahoma",sans-serif;}
     #tray ul {margin:0 20px; list-style:none;}
     #tray li {display:inline;}
     #tray li a {display:block; float:left; padding:17px 20px 17px 18px; background:url("../design/tray-separator.gif") 100% 0 no-repeat; text-decoration:none;}
     #tray li a:hover {background:url("../design/tray-hover.gif");}
-    #tray li#tray-active a {background:url("../design/tray-active.gif");}
+    #tray li.active a {background:url("../design/tray-active.gif");}
 
         #search {position:absolute; top:8px; right:20px;}
         #search div {position:relative; width:185px;}

@@ -38,6 +38,26 @@
 	margin-right: 10px;
 }
 
+.juice-form input, .juice-form label, .juice-form textarea, .juice-form select, .juice-form p, .juice-form li {
+	float: left;
+	clear: left;
+	margin: 0;
+}
+
+.juice-form label {
+	margin-top: 8px;
+}
+
+.juice-form input[type=submit] {
+	margin-top: 10px;
+	font-size: 18px;
+}
+
+.juice-form ul.errorlist {
+	list-style: none;
+	color: red;
+}
+
 .comment-form input, .comment-form label, .comment-form textarea {
 	float: left;
 	clear: left;

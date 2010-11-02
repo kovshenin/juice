@@ -54,7 +54,7 @@
 		<h3>Leave a comment</h3>
 		<form action="{{ post.permalink }}" method="POST">
 			<div class="comment-form">
-				{{ comment_form }}
+				{{ comment_form.as_p }}
 				<input type="submit" value="Leave a Comment" />
 			</div>
 		</form>

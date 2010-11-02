@@ -1,5 +1,5 @@
 {% load chunks %}
-{% load menu %}
+{% load navigation %}
 <?xml version="1.0"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -30,7 +30,7 @@
         <!-- Navigation -->
         <div id="nav">
 			{% for entry in global.navigation.main %}
-				<a href="{{ entry.permalink }}" {% ifequal request.path entry.permalink %}id="nav-active"{% endifequal %} class="{% menu_active request entry.permalink %}">{{ entry.title }}</a> {% if not forloop.last %}<span>|</span>{% endif %}
+				<a href="{{ entry.permalink }}" class="{% menu_active request entry.permalink %}">{{ entry.title }}</a> {% if not forloop.last %}<span>|</span>{% endif %}
 			{% endfor %}
         </div> <!-- /nav -->
 

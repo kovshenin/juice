@@ -12,7 +12,8 @@ from juice.posts.models import Post
 from juice.comments.models import Comment, CommentForm
 from juice.taxonomy.models import Term, TermRelation
 from juice.pages.models import Page
-from juice.forms.models import Form
+
+import juice.forms.models
 
 from juice.front.permalinks import make_permalink
 
@@ -46,7 +47,7 @@ def index(request, page=1):
 	for category in categories:
 		category.permalink = make_permalink(category)
 	
-	ContactForm = Form.create_form_by_slug('contact-form')	
+	ContactForm = juice.forms.models.FormsAPI.create_form_by_slug('contact-form')	
 	if request.method == 'POST':
 		contact_form = ContactForm(request.POST)
 		if contact_form.is_valid():
@@ -154,6 +155,10 @@ def page(request, page_slug, page_id=False):
 		p = Page.objects.get(id=page_id)
 	else:
 		p = Page.objects.get(slug=page_slug)
+		
+	from juice.front.shortcodes import shortcodes
+	p.content = shortcodes.apply(p.content, request)
+	
 	return render('page.html', {'page': p}, context_instance=RequestContext(request))
 
 # This function routes all requests that didn't match any regex
@@ -196,17 +201,7 @@ def render(template_name, context={}, **kwargs):
 	pages = Page.tree.filter(parent__id=None)
 	# set the permalinks
 	for page in pages:
-		entry = {
-			'title': page.title,
-			'permalink': make_permalink(page),
-		}
-		main_menu.append(entry)
-		
-	main_menu.append({
-		'name': 'contacts',
-		'title': 'Contacts',
-		'permalink': '',
-	})
+		main_menu.append({'title': page.title, 'permalink': make_permalink(page)})
 		
 	context['global'] = {
 		'title': 'Juice',

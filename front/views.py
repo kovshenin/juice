@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.template import RequestContext
+from django.core.paginator import Paginator
 
 from juice.posts.models import Post
 from juice.comments.models import Comment, CommentForm
@@ -64,6 +65,42 @@ def index(request, page=1):
 		contact_form = ContactForm()	
 
 	return render('home.html', {'posts': posts, 'pages': pages, 'tags': tags, 'categories': categories, 'contact_form': contact_form}, context_instance=RequestContext(request))
+	
+# posts list
+def posts(request, page=1):
+	posts_list = Post.objects.all().order_by('-published')
+	paginator = Paginator(posts_list, 10)
+	
+	try:
+		p = paginator.page(page)
+	except (EmptyPage, InvalidPage):
+		p = paginator.page(paginator.num_pages)
+		
+	p.next_link = reverse('juice.front.views.posts', kwargs={'page': p.next_page_number()})
+	p.previous_link = reverse('juice.front.views.posts', kwargs={'page': p.previous_page_number()})
+		
+	posts = p.object_list
+	ctype = ContentType.objects.get_for_model(Post)
+	
+	for post in posts:
+		# read the relations with posts and terms
+		rel_tags = TermRelation.objects.filter(content_type__pk=ctype.id, object_id=post.id, term__taxonomy='tag')
+		rel_categories = TermRelation.objects.filter(content_type__pk=ctype.id, object_id=post.id, term__taxonomy='category')
+		
+		post.tags = []
+		post.categories = []
+
+		for tag in rel_tags:
+			tag.term.permalink = make_permalink(tag.term)
+			post.tags.append(tag.term)
+		for category in rel_categories:
+			category.term.permalink = make_permalink(category.term)
+			post.categories.append(category.term)
+		
+		post.permalink = make_permalink(post)
+			
+	return render('posts.html', {'posts': posts, 'paginator': p}, context_instance=RequestContext(request))
+	
 	
 # single post view
 def single(request, post_slug):
@@ -210,9 +247,8 @@ def render(template_name, context={}, **kwargs):
 			'main': main_menu,
 			'tray': [
 				{'title': 'Home', 'permalink': make_permalink()},
-				{'title': 'Products', 'permalink': ''},
-				{'title': 'Services', 'permalink': ''},
-				{'title': 'Feedback', 'permalink': ''},
+				{'title': 'Blog', 'permalink': '/posts/'},
+				{'title': 'Services', 'permalink': '/services/'},
 				{'title': 'About', 'permalink': '/about/'},
 			]
 		},

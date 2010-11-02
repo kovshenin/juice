@@ -79,3 +79,8 @@
 	list-style: none;
 	color: red;
 }
+
+/* Content */
+.content ul, ol {
+	margin-left: 40px;
+}

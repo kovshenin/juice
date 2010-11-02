@@ -8,23 +8,25 @@
     <div id="col-top"></div>
     <div id="col" class="box">
 		<h1><a href="{{ post.permalink }}">{{ post.title }}</a></h1>
-		<p>{{ post.content|safe }}</p>
-		<small>
-			Published by {{ post.author }} on {{ post.published|date:"d.m.Y" }}
-			{% if post.categories and post.tags %}
-				in the following categories: {% taxonomy_list post.categories %} and tagged: {% taxonomy_list post.tags %}.
-			{% else %}
-				{% if post.categories %}
-					in the following categories: {% taxonomy_list post.categories %}.
+		<div class="content">
+			<p>{{ post.content|safe }}</p>
+			<small>
+				Published by {{ post.author }} on {{ post.published|date:"d.m.Y" }}
+				{% if post.categories and post.tags %}
+					in the following categories: {% taxonomy_list post.categories %} and tagged: {% taxonomy_list post.tags %}.
 				{% else %}
-					{% if post.tags %}
-						and tagged: {% taxonomy_list post.tags %}.
+					{% if post.categories %}
+						in the following categories: {% taxonomy_list post.categories %}.
 					{% else %}
-						.
+						{% if post.tags %}
+							and tagged: {% taxonomy_list post.tags %}.
+						{% else %}
+							.
+						{% endif %}
 					{% endif %}
 				{% endif %}
-			{% endif %}
-		</small>
+			</small>
+		</div>
     </div> <!-- /col -->
     <div id="col-bottom"></div>
     

@@ -1,0 +1,160 @@
+{% extends "impress/base.html" %}
+{% load chunks %}
+
+{% block title %}Home{% endblock %}
+{% block content %}
+    <!-- Promo -->
+    <div id="col-top"></div>
+    <div id="col" class="box">
+    
+        <div id="ribbon"></div> <!-- /ribbon (design/ribbon.gif) -->
+        
+        <!-- Screenshot in browser (replace tmp/browser.gif) -->
+        <div id="col-browser"><a href="#"><img src="/static/tmp/browser.gif" width="255" height="177" alt="" /></a></div> 
+        
+        <div id="col-text">
+
+            <h2 id="slogan"><span></span>Place for your slogan.</h2>
+            
+            <p>{% chunk "home-promo" %}</p>
+            
+            <p id="btns">
+                <a href="#"><img src="/static/design/btn-tell.gif" alt="" /></a>
+                <a href="#"><img src="/static/design/btn-purchase.gif" alt="" /></a>
+            </p>
+
+        </div> <!-- /col-text -->
+    
+    </div> <!-- /col -->
+    <div id="col-bottom"></div>
+    
+    <hr class="noscreen" />
+    
+    <!-- 3 columns -->
+    <div id="cols3-top"></div>
+    <div id="cols3" class="box">
+    
+        <!-- Column I. -->
+        <div class="col">
+
+            <h3><a href="#">Product I.</a></h3>
+            
+            <p class="nom t-center"><a href="#"><img src="/static/tmp/200x140.gif" alt="" /></a></p>
+
+            <div class="col-text">
+
+                <p>Lorem ipsum dolor sit amet <a href="#">consectetuer</a> amit adipiscing elit. <strong>Nunc feugiat.</strong>
+                Inam massa est feugiat <a href="#">pharetra</a> lacus. In non arcu nec liberom pharetra rutrum est.</p>
+                
+                <ul class="ul-01">
+                    <li>Lorem ipsum dolor sit amet</li>
+                    <li>Lorem ipsum dolor sit amet</li>
+                    <li>Lorem ipsum dolor sit amet</li>
+                </ul>
+
+            </div> <!-- /col-text -->
+
+            <div class="col-more"><a href="#"><img src="/static/design/cols3-more.gif" alt="" /></a></div>
+
+        </div> <!-- /col -->
+
+        <hr class="noscreen" />
+
+        <!-- Column II. -->
+        <div class="col">
+
+            <h3><a href="#">Product II.</a></h3>
+
+            <p class="nom t-center"><a href="#"><img src="/static/tmp/200x140.gif" alt="" /></a></p>
+
+            <div class="col-text">
+
+                <p>Lorem ipsum dolor sit amet consectetuer amit adipiscing elit. <strong>Nunc feugiat.</strong>
+                Inam massa est feugiat <a href="#">pharetra</a> lacus. In non arcu nec liberom pharetra rutrum est.</p>
+
+                <ul class="ul-01">
+                    <li>Lorem ipsum dolor sit amet</li>
+                    <li>Lorem ipsum dolor sit amet</li>
+                    <li>Lorem ipsum dolor sit amet</li>
+                </ul>
+
+            </div> <!-- /col-text -->
+
+            <div class="col-more"><a href="#"><img src="/static/design/cols3-more.gif" alt="" /></a></div>
+
+        </div> <!-- /col -->
+
+        <hr class="noscreen" />
+
+        <!-- Column III. -->
+        <div class="col last">
+
+            <h3><a href="#">Product III.</a></h3>
+
+            <p class="nom t-center"><a href="#"><img src="/static/tmp/200x140.gif" alt="" /></a></p>
+
+            <div class="col-text">
+
+                <p>Lorem ipsum dolor sit amet consectetuer amit adipiscing elit. <strong>Nunc feugiat.</strong>
+                Inam massa est feugiat pharetra lacus. In non arcu nec liberom <a href="#">pharetra rutrum est</a>.</p>
+
+                <ul class="ul-01">
+                    <li>Lorem ipsum dolor sit amet</li>
+                    <li>Lorem ipsum dolor sit amet</li>
+                    <li>Lorem ipsum dolor sit amet</li>
+                </ul>
+
+            </div> <!-- /col-text -->
+
+            <div class="col-more"><a href="#"><img src="/static/design/cols3-more.gif" alt="" /></a></div>
+
+        </div> <!-- /col -->
+
+        <hr class="noscreen" />
+    
+    </div> <!-- /cols3 -->
+    <div id="cols3-bottom"></div>
+    
+    <!-- 2 columns -->
+    <div id="cols2-top"></div>
+    <div id="cols2" class="box">
+    
+        <!-- Blog -->
+        <div id="col-left">
+
+            <div class="title">
+                <span class="f-right"><a href="#" class="ico-rss">RSS feed</a></span>
+                <h4>Corporate Blog</h4>
+            </div> <!-- /title -->
+            
+            <ul class="ul-list nomb">
+				{% for post in posts %}
+					<li><span class="f-right"><a href="{{ post.permalink }}#comments" class="ico-comment">{{ post.comments_count }} comment(s)</a></span> <span class="date">{{ post.published|date:"d.m.Y" }}</span> <a href="{{ post.permalink }}" class="article">{{ post.title }}</a></li>
+				{% endfor %}
+            </ul>
+        
+        </div> <!-- /col-left -->
+
+        <hr class="noscreen" />
+
+        <!-- Testimonials -->
+        <div id="col-right">
+        
+            <h4><span>Testimonials</span></h4>
+
+            <div class="box">
+            
+                <div class="col-right-img"><img src="/static/tmp/65x65.gif" width="65" height="65" alt="" /></div>
+                <div class="col-right-text">
+
+                    {% chunk "testimonials-text" %}
+
+                </div> <!-- /col-right-text -->
+            
+            </div> <!-- /box -->
+        
+        </div> <!-- /col-right -->
+    
+    </div> <!-- /cols2 -->
+    <div id="cols2-bottom"></div>
+{% endblock %}

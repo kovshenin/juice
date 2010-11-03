@@ -1,0 +1,172 @@
+{% load chunks %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+			<head profile="http://gmpg.org/xfn/11">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>{% block title %}{% endblock %}{% chunk "title" %}</title>
+	<meta http-equiv="author" content="Konstantin Kovshenin" />
+	<link rel="index" title="{% chunk 'title' %}" href="{{ global.home }}" />
+	<meta name="generator" content="Juice 0.1" />
+	<link rel="stylesheet" href="/static/css/reset.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="/static/css/960.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen" />
+	<link rel="shortcut icon" href="/static/images/favicon.ico" />
+</head>
+<body>
+	<div id="head">
+		<div class="container_12">
+			<div class="grid_9 logo">
+				<span>&lt;?</span><h1><a href="{{ global.home }}">{% chunk "title" %}</a></h1>
+
+			</div>
+			<div class="grid_3 search">
+				<p>
+					{% for item in global.navigation.topright %}
+						<a href="{{ item.permalink }}">{{ item.title }}</a>{% if not forloop.last %}, {% endif %}
+					{% endfor %}
+				</p>
+				<form method="get" id="searchform" action="{{ global.home }}">
+					<input type="text" value="" name="search" id="s" />
+					<input type="submit" style="display: none" />
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div id="body">
+		<div class="container_12">
+			<div class="grid_9 content">
+
+				<!--<div class="tooltip-container">
+					<p><strong>Howdy!</strong> Thanks for coming and enjoy your stay! Take a look at the <a href="#" rel="sitemap" class="slider-click">sitemap</a> and don't forget to <a href="#" rel="tbox-wrap" class="slider-click">chirp</a>!</p>
+				</div>
+				<div id="tbox-wrap" class="slider-item" style="display: none;">
+					<span><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/tbox.png" class="tweet" alt="Tweet!" />This is the fastest and easiest way you can reach out to me. Just type in your message in the box below and click Tweet. If it's the first time you're tweeting via this form, you'll be directed to Twitter to grant access. Alternatively you can use my <a href="http://kovshenin.com/feedback/">feedback form</a>.</span>
+					<div id="tbox"></div>
+				</div>-->
+				<div class="clear"></div>
+				<div id="sitemap" class="slider-item" style="display: none">
+					<div class="grid_3 alpha">
+						<ul>
+							<li><h3>Blog</h3></li>
+							<li><a href="http://kovshenin.com">Home</a></li>
+
+							<li><a href="http://kovshenin.com/tags/">Tag cloud</a></li>
+							<li><a href="http://kovshenin.com/links">Delicious links</a></li>
+							<li><a href="http://kovshenin.com/feedback">Feedback</a></li>
+							<li>&nbsp;</li>
+							<li><a href="http://kovshenin.com/feed/">Blog RSS</a></li>
+							<li><a href="http://kovshenin.com/comments/feed/">Comments RSS</a></li>
+
+						</ul>
+					</div>
+					<div class="grid_3 alpha">
+						<ul>
+							<li><h3>Personal</h3></li>
+							<li><a href="http://kovshenin.com/about/">About me</a></li>
+							<li><a href="http://kovshenin.com/services/">Web Services</a></li>
+
+							<li><a href="http://twitter.com/kovshenin">Twitter feed</a></li>
+							<li><a href="http://flickr.com/photos/kovshenin">Flickr feed</a></li>
+							<li>&nbsp;</li>
+							<li><a href="http://www.linkedin.com/in/kovshenin">LinkedIn profile</a></li>
+							<li><a href="http://facebook.com/kovshenin">Facebook page</a></li>
+						</ul>
+					</div>
+
+					<div class="grid_3 alpha omega">
+						<ul>
+							<li><h3>WordPress</h3></li>
+							<li><a href="http://kovshenin.com/wordpress/themes/">Themes</a></li>
+							<li><a href="http://kovshenin.com/wordpress/plugins/">Plugins</a></li>
+							<li>&nbsp;</li>
+							<li><a href="http://kovshenin.com/wordpress/plugins/retweet-anywhere/">Retweet Anywhere</a></li>
+
+							<li><a href="http://kovshenin.com/wordpress/plugins/twitter-friendly-links/">Twitter Friendly Links</a></li>
+							<li><a href="http://kovshenin.com/wordpress/plugins/technical-support/">Technical Support</a></li>
+							<li><a href="http://kovshenin.com/wordpress/plugins/quick-flickr-widget/">Quick Flickr Widget</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="clear"></div>
+				
+				{% block content %}
+				{# Content block goes here, posts and page contents, lists and archives #}
+				{% endblock %}
+
+			</div><!-- grid_9 content -->
+			<div class="grid_3 sidebar">
+				{% block sidebar %}
+				<div class="social">
+					<a href="http://kovshenin.com/feed/"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/rss.png" alt="RSS feed" /></a>
+					<a href="http://twitter.com/kovshenin"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/twitter.png" alt="Twitter" /></a>
+					<a href="http://www.linkedin.com/in/kovshenin"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/linkedin.png" alt="Linked In" /></a>
+					<a href="http://facebook.com/kovshenin"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/facebook.png" alt="Facebook" /></a>
+					<a href="http://digg.com/users/kovshenin"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/digg.png" alt="Digg" /></a>
+					<a href="http://kovshenin.deviantart.com/gallery"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/deviantart.png" alt="DeviantArt" /></a><br />
+					<a href="http://delicious.com/kovshenin"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/delicious.png" alt="Delicious" /></a>
+					<a href="http://www.youtube.com/user/kovshenin"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/youtube.png" alt="YouTube" /></a>
+					<a href="http://flickr.com/photos/kovshenin"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/flickr.png" alt="Flickr" /></a>
+					<a href="http://technorati.com/blogs/kovshenin.com"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/technorati.png" alt="Technorati" /></a>
+					<a href="http://last.fm/user/kovshenin"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/lastfm.png" alt="Last.fm" /></a>			
+					<a href="http://myspace.com/kovshenin"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/myspace.png" alt="MySpace" /></a>
+
+					<div class="tag-cloud">
+						<!-- Tag cloud goes here -->
+					</div>
+				</div>
+
+				<div class="bio">
+					<a href="http://kovshenin.com/about/">
+						<img alt="Konstantin Kovshenin" src="/static/images/me.jpg" />
+					</a>
+					<p>Hi! I'm Konstantin, a web developer from Moscow, Russia. CTO at <a href="http://frumatic.com">Frumatic</a><br /><a href="http://kovshenin.com/about/">More</a> &raquo;</p>
+				</div>
+
+				<div class="more">
+					<p class="title"><a href="#" class="extended_click">more widgets &raquo;</a></p>
+					<div id="sidebar_extended">
+						<!-- sidebar extended -->
+						<div class="widget">
+							<div class="textwidget">
+								<div id="google_translate_element" style="margin-left: 8px;">
+								</div>
+							</div>
+						</div>
+						
+						<div class="widget">
+							<div class="widgettitle"></div>
+							<ul>
+								<li><a href='#'>Archive</a></li>
+							</ul>
+						</div>
+						
+						<div class="widget">
+							<div class="textwidget">
+							</div>
+						</div>
+						<!--/ sidebar extended -->
+					</div>
+				</div>
+				{% endblock %}
+			</div><!-- grid_3 sidebar -->
+		</div><!-- container_12 -->
+	</div><!-- body -->
+	
+	<div class="clear"></div>
+	<div id="footer">
+		<div class="container_12">
+			<div class="grid_9 alpha">
+				<p>Keep track via feed: <a href="http://kovshenin.com/feed/">entries</a> or <a href="http://kovshenin.com/comments/feed/">comments</a>. Questions? Suggestions? <a href="http://kovshenin.com/feedback/">Feedback</a>!<br />
+
+				Oh and I totally forgot to mention that I love <a href="http://wordpress.org/">WordPress</a> and currently running 3.0.</p>
+			</div>
+			<div class="grid_3 omega">
+				<p>&copy; 2008-2010<br />
+				kovshenin.com</p>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>

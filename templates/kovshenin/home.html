@@ -1,0 +1,34 @@
+{% extends "kovshenin/base.html" %}
+{% load humanize %}
+{% block content %}
+	{% for post in posts %}
+		<div class="post post-{{ post.id }}">
+			<h1><a href="{{ post.permalink }}" rel="bookmark" title="Permanent Link to {{ post.title }}">{{ post.title }}</a></h1>
+			<p class="date">{{ post.published|naturalday:"F jS, Y"|capfirst }}</p>
+
+			{# Assuming the content is valid html and surrounded by <p> tags #}
+			{{ post.content|safe }}
+
+			<div class="meta">
+				<div class="share">
+					<a href="http://twitter.com/?status=Amazon+Web+Services%3A+Cloud+Computing+Free+of+Charge+http%3A%2F%2Fkovshenin.com%2F%3Fp%3D2608" class="retweet-anywhere" title="Retweet This Post" rev="" rel="2608"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/retweet.png" alt="Retweet" /></a>
+					<!--<fb:like layout="button_count" show_faces="false" width="90" font="tahoma" href="http://kovshenin.com/archives/amazon-web-services-cloud-computing-free-of-charge/"></fb:like>-->
+				</div>
+
+				<p class="links">
+					<a href="{{ post.permalink }}" rel="bookmark" title="Permanent Link to {{ post.title }}">Permalink</a>, 
+					<a href="{{ post.permalink }}#comments" title="Comment on {{ post.title }}">comment ({{ post.comments_count }})</a> 
+					or share:
+				</p>
+			</div>
+		</div>
+		<div class="clear"></div>
+	{% endfor %}
+	
+	{# Pagination is not straightforward here, since older entries actually means next page, so watch out. #}
+	<div class="navigation">
+		{% if paginator.has_next %}<div class="alignleft"><a href="{{ paginator.next_link }}" >&laquo; Older Entries</a></div>{% endif %}
+		{% if paginator.has_previous %}<div class="alignright"><a href="{{ paginator.previous_link }}">Newer Entries &raquo;</a></div>{% endif %}
+	</div>
+
+{% endblock %}

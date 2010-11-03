@@ -1,0 +1,442 @@
+ul, ol {
+	line-height: 1.3em;
+	margin-left: 30px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+ul {
+	list-style: square;
+}
+
+ol {
+	list-style: decimal;
+}
+
+a.bookmark {
+	text-decoration: none;
+	color: inherit;
+}
+
+#head {
+	border-bottom: solid 1px #ccc;
+	height: 100px;
+	overflow: hidden;
+}
+
+.logo {
+	margin-top: 58px;
+}
+
+.logo h1, .logo span {
+	float: left;
+	font-size: 1.5em;
+	color: black;
+}
+
+.logo h1 a {
+	text-decoration: none;
+	text-transform: lowercase;
+}
+
+.logo span {
+	margin-left: -32px;
+	margin-top: -6px;
+	font-size: 1.5em;
+	color: #ccc;
+}
+
+.search p {
+	background: black;
+	color: white;
+	font-size: 0.85em;
+	padding: 8px;
+	-moz-border-radius-bottomleft: 7px;
+	-moz-border-radius-bottomright: 7px;
+	text-align: center;
+	text-transform: lowercase;
+}
+
+.search p a {
+	color: white;
+}
+
+.search input {
+	height: 30px;
+	border: solid 1px #ccc;
+	padding-left: 28px;
+	margin-top: 18px;
+	width: 190px;
+	background: url(../images/search.png) 8px 8px no-repeat;
+}
+
+/* Sidebar Social & Tag Cloud */
+.sidebar .social {
+	margin-top: 18px;
+	background: #ececec;
+	-moz-border-radius: 7px;
+	text-align: center;
+	padding: 20px 0;
+}
+
+.sidebar .social img {
+	margin-left: -2px;
+	width: 32px;
+	height: 32px;
+}
+
+.sidebar .social .tag-cloud {
+	margin-top: 10px;
+	line-height: 1.2em;
+}
+
+.sidebar .social .tag-cloud a {
+	text-decoration: none;
+}
+
+.sidebar .social .tag-cloud a:hover {
+	text-decoration: underline;
+}
+
+/* Sidebar Bio */
+.sidebar .bio {
+	margin-top: 10px;
+	padding: 8px;
+}
+
+.sidebar .bio img {
+	float: left;
+	margin-right: 6px;
+}
+
+/* Sidebar More */
+.sidebar .more {
+	margin-top: 10px;
+}
+
+.sidebar .more p.title {
+	text-transform: uppercase;
+	text-align: right;
+	font-size: 0.7em;
+	border-bottom: dotted 1px #ccc;
+}
+
+.sidebar .more p.title a {
+	text-decoration: none;
+	color: gray;
+}
+
+.widget {
+	margin-top: 20px;
+}
+
+.widget ul {
+	margin-left: 36px;
+}
+
+/* Content Tooltip & Sitemap & Tweet Box */
+.content {
+	margin-top: 18px;
+}
+
+.content .tooltip-container {
+	-moz-border-radius: 7px;
+	border: solid 1px #ccc;
+	padding: 10px;
+}
+
+#sitemap {
+	-moz-border-radius: 7px;
+	border: solid 1px #ccc;
+	overflow: hidden;
+	/*padding: 10px;*/
+	margin-top: 10px;
+}
+
+#sitemap div ul {
+	list-style: none;
+	margin: 0;
+	padding: 10px;
+}
+
+#sitemap h3 {
+	font-size: 1.6em;
+	padding-bottom: 10px;
+}
+
+#tbox-wrap {
+	-moz-border-radius: 7px;
+	border: solid 1px #ccc;
+	overflow: hidden;
+	margin-top: 10px;
+	height: 210px;
+}
+
+#tbox iframe.twitter-anywhere-tweet-box {
+	width: 498px !important;
+	height: 140px !important;
+}
+
+#tbox-wrap span {
+	padding: 10px;
+	display: block;
+	line-height: 1.2em;
+}
+
+#tbox-wrap img.tweet {
+	float: left;
+	margin-right: 14px;
+}
+
+/* Content Post */
+.post {
+	margin-top: 10px;
+}
+
+.post h1 {
+	font-size: 2.1em;
+	padding-top: 8px;
+}
+
+.post h2 {
+	font-size: 1.8em;
+	padding-top: 16px;
+}
+
+.post h3 {
+	font-size: 1.5em;
+	padding-top: 8px;
+}
+
+.post h4 {
+	font-size: 1.3em;
+	padding-top: 8px;
+}
+
+.post h1 a {
+	text-decoration: none;
+}
+
+.post p.date {
+	font-size: 0.9em;
+	margin-top: 8px;
+	display: block;
+	margin-bottom: 8px;
+	color: gray;
+}
+
+.post p {
+	margin: 10px 0;
+	text-align: justify;
+}
+
+.post .meta p.links {
+	float: right;
+	background: url(../images/quote.png) no-repeat 0 2px;
+	padding-left: 22px;
+}
+
+.post .meta .share {
+	float: right;
+	margin-top:3px;
+	margin-left: 10px;
+}
+
+span.tagged {
+	font-size: 0.85em;
+	line-height: 1.2em;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	display: block;
+	color: gray;
+}
+
+span.tagged a {
+	color: gray;
+}
+
+.navigation {
+	display: block;
+	clear: both;
+	margin: 10px 0;
+	color: gray;
+	overflow: hidden;
+}
+
+.navigation a {
+	color: gray;
+}
+
+.archive-title h1 {
+	font-size: 2.1em;
+	padding-top: 8px;
+}
+
+/* Comments */
+.comments-template h3 {
+	font-size: 1.5em;
+	margin-top: 30px;
+	margin-bottom: 10px;
+	clear: left;
+}
+
+.comments-template p {
+	margin-top: 10px;
+}
+
+#comment {
+	width: 100%;
+	height: 100px;
+}
+
+ul.children {
+	list-style: none;
+	padding: 0;
+	margin-left: 42px;
+}
+
+ol.commentlist {
+	list-style: none;
+	padding: 0;
+	margin-left: 0;
+	float: left;
+	clear: both;
+}	
+
+ol.commentlist li, ul.children li {
+	padding-left:4px; 
+	border-left: dotted 1px #cccccc;
+}
+
+.commentlist .avatar {
+	float: left;
+	margin-right: 10px;
+}
+
+.commentlist cite {
+	font-style: normal;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.commentlist .comment-meta {
+	font-size: 0.85em;
+}
+
+.commentlist p {
+	margin-left: 42px;
+}
+
+.reply {
+	margin-left: 42px;
+	margin-bottom: 20px;
+}
+
+#commentform p {
+	margin-left: 0;
+}
+
+.comment #respond {
+	margin-left: 42px;
+}
+
+/* Footer */
+#footer {
+	margin-top: 30px;
+	border-top: solid 1px #ccc;
+	padding-top: 18px;
+	margin-bottom: 18px;
+	overflow:hidden;
+}
+
+/* WordPress Classes */
+.aligncenter {
+	margin: 0 auto;
+	display: block;
+}
+
+.alignleft {
+	float: left;
+}
+
+.alignright {
+	float: right;
+}
+
+blockquote {
+	padding: 1px 18px;
+	margin-right: 0px;
+	border-left: 4px solid #ECECEC;
+	-width: 550px;
+}
+
+pre {
+	width: 680 px;
+	overflow: hidden;
+}
+
+h1,h2,h3,h4,h5 {
+	font-family: "Trebuchet MS", Tahoma, sans-serif;
+	font-weight: normal;
+	line-height: 1em;
+}
+
+body {
+	font: 13px/1.5 Tahoma, sans-serif;
+	color: #666;
+}
+
+a {
+	color: black;
+}
+
+p {
+	line-height: 1.3em;
+}
+
+acronym, abbr {
+	border-bottom: dotted 1px gray;
+}
+
+/* Plugins etc */
+
+.kimage {
+	background: white url(../images/kimage/bg.png) 0 0 repeat-x;
+	display: block;
+	clear: both;
+	float: left;
+	width: 680px;
+	height: 120px;
+}
+
+.kimage img {
+	float: right;
+	margin: 0 20px 0 20px;
+}
+
+.kimage h2 {
+	float: left;
+	color: #777777;
+	font-size: 1.8em !important;
+	margin-left: 20px;
+	margin-top: 58px !important;
+	padding: 0 !important;
+	letter-spacing: -1px;
+}
+
+.sociable {
+	display: inline;
+	position: relative;
+	top: 1px;
+}
+
+.post .meta .share a.retweet-anywhere {
+	position: relative;
+	margin-left: 8px;
+	top: 2px;
+}
+
+/* Animations etc */
+#sidebar_extended {
+	display: none;
+}

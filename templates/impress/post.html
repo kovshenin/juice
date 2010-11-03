@@ -1,0 +1,66 @@
+{% extends "impress/base.html" %}
+{% load chunks %}
+{% load taxonomy %}
+
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+    <!-- Promo -->
+    <div id="col-top"></div>
+    <div id="col" class="box">
+		<h1><a href="{{ post.permalink }}">{{ post.title }}</a></h1>
+		<div class="content">
+			<p>{{ post.content|safe }}</p>
+			<small>
+				Published by {{ post.author }} on {{ post.published|date:"d.m.Y" }}
+				{% if post.categories and post.tags %}
+					in the following categories: {% taxonomy_list post.categories %} and tagged: {% taxonomy_list post.tags %}.
+				{% else %}
+					{% if post.categories %}
+						in the following categories: {% taxonomy_list post.categories %}.
+					{% else %}
+						{% if post.tags %}
+							and tagged: {% taxonomy_list post.tags %}.
+						{% else %}
+							.
+						{% endif %}
+					{% endif %}
+				{% endif %}
+			</small>
+		</div>
+    </div> <!-- /col -->
+    <div id="col-bottom"></div>
+    
+	<div id="col-top"></div>
+    <div id="col" class="box">
+		{% if post.comments %}
+		<h2><a href="#comments" name="comments">Comments</a></h2>
+		<p>{% chunk "comment-text" %}</p>
+		
+		<div class="comments">
+			{% for comment in post.comments %}
+				<div class="comment-entry comment-level-{{ comment.level }}">
+					<img src="{{ comment.avatar }}?size=50" alt="{{ comment.name }}" class="avatar" />
+					<div class="comment-text">
+						<strong>{{ comment.name }}</strong> wrote:<br />
+						<small>{{ comment.published|date:"d.m.Y" }} at {{ comment.published|date:"H:i" }}</small>
+						<p>{{ comment.content }}</p>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+		{% else %}
+		<h3>No comments</h3>
+		<p>{% chunk "no-comments" %}</p>
+		{% endif %}
+		
+		<h3>Leave a comment</h3>
+		<form action="{{ post.permalink }}" method="POST">
+			<div class="comment-form">
+				{{ comment_form.as_p }}
+				<input type="submit" value="Leave a Comment" />
+			</div>
+		</form>
+    </div> <!-- /col -->
+    <div id="col-bottom"></div>
+    
+{% endblock %}

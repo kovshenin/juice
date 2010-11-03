@@ -28,7 +28,7 @@
 	
 	{# Comments Template #}
 	<div class="comments-template">
-		<h3 id="comments">421 Responses to &#8220;Twitter Friendly Links&#8221;</h3>
+		<h3 id="comments">{{ post.comments.count }} response{{ post.comments.count|pluralize }} to &laquo;{{ post.title }}&raquo;</h3>
 		{% if post.comments %}
 		<ol class="commentlist">
 			{# Threaded comments #}

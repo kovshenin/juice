@@ -10,8 +10,8 @@ def get_patterns():
 		(r'^tag/(?P<tag_slug>[-\w]+)/$', 'tag'),
 		(r'^(?P<slug>[-\w\/]+)/$', 'route'),
 
-		# this is pseudo and is never reached as route is already defined
-		# these are used for correct url resolving
+		# This is pseudo and is never reached as route is already defined.
+		# These are used for correct url resolving.
 		(r'^(?P<page_slug>[-\w]+)/$', 'page'),
 	)
 

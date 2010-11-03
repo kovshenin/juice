@@ -22,7 +22,7 @@
 			<div class="grid_3 search">
 				<p>
 					{% for item in global.navigation.topright %}
-						<a href="{{ item.permalink }}">{{ item.title }}</a>{% if not forloop.last %}, {% endif %}
+						<a href="{{ item.permalink }}">{{ item.caption }}</a>{% if not forloop.last %}, {% endif %}
 					{% endfor %}
 				</p>
 				<form method="get" id="searchform" action="{{ global.home }}">

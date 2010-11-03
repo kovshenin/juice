@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import os.path
 
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -14,6 +14,7 @@ from juice.posts.models import Post
 from juice.comments.models import Comment, CommentForm
 from juice.taxonomy.models import Term, TermRelation
 from juice.pages.models import Page
+from juice.navigation.models import Menu
 
 import juice.forms.models
 
@@ -21,7 +22,7 @@ from juice.front.permalinks import make_permalink
 
 # homepage
 def index(request, page=1):
-	posts_list = Post.objects.all().order_by('-published')
+	posts_list = Post.objects.filter(published__lte=datetime.now()).order_by('-published')
 	paginator = Paginator(posts_list, 5)
 	
 	try:
@@ -44,7 +45,7 @@ def index(request, page=1):
 	
 # single post view
 def single(request, post_slug):
-	p = Post.objects.get(slug=post_slug)
+	p = Post.objects.get(slug=post_slug, published__lte=datetime.now())
 	ctype = ContentType.objects.get_for_model(Post)	
 	
 	# read the relations with posts and terms
@@ -172,25 +173,33 @@ def route(request, slug):
 # variables used by the base template (base.html). This reduces
 # redundant code.
 def render(template_name, context={}, **kwargs):
-	main_menu = [
-		{'title': 'Home', 'permalink': make_permalink()}
-	]
-	pages = Page.tree.filter(parent__id=None)
-	# set the permalinks
-	for page in pages:
-		main_menu.append({'title': page.title, 'permalink': make_permalink(page)})
+	
+	# Generate the navigation options based on what's in the navigation tables.
+	# Loop through the items and add them to the navigation dict, which is passed
+	# with the context in the global variable. This can be used in your templates
+	# by accessing global.navigation.menuslug (no spaces, dots or dashes in the slugs).
+	navigation = {}
+	available_menus = Menu.objects.all()
+	for menu in available_menus:
+		navigation[menu.slug] = []
+		menu.populate() # Populates the menu permalinks from linked objects
 		
+		for item in menu.items:
+			navigation[menu.slug].append({
+				'caption': item.caption,
+				'permalink': item.permalink,
+			})
+
+	# Form the global context here, these variables are passed to each and every template
+	# rendered via juice.front.views.render(). You can add additional variables which can
+	# be used in your base template or children.
 	context['global'] = {
 		'title': 'Juice',
 		'home': make_permalink(),
-		'navigation': {
-			'main': main_menu,
-			'topright': [
-				{'title': 'Sitemap', 'permalink': '/sitemap/'},
-				{'title': 'About', 'permalink': '/about/'},
-				{'title': 'Feedback', 'permalink': '/feedback/'},
-			]
-		},
+		'navigation': navigation
 	}
 	
+	# Render the final response based on the JUICE_THEME Django setting. Note that this structure
+	# is mandatory for Juice templates to work correctly. If you're looking to change URL styles
+	# to access dynamic and static data, use the permalinks.py file and urls.py respectively.
 	return render_to_response("%s/%s" % (settings.JUICE_THEME, template_name), context, **kwargs)

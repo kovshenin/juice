@@ -102,6 +102,7 @@ INSTALLED_APPS = (
 	'juice.forms',
 	'juice.analytics',
 	'juice.chunks',
+	'juice.navigation',
 )
 
 LOG_FILE = '/tmp/juice.log'

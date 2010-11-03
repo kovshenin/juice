@@ -5,8 +5,6 @@ def get_patterns():
 	return patterns('juice.front.views',
 		(r'^$', 'index'),
 		(r'^page/(?P<page>[\d]+)/$', 'index'),
-		(r'^posts/$', 'posts'),
-		(r'^posts/(?P<page>[\d]+)/$', 'posts'),
 		(r'^posts/(?P<post_slug>[-\w]+)/$', 'single'),
 		(r'^category/(?P<category_slug>[-\w/]+)/$', 'category'),
 		(r'^tag/(?P<tag_slug>[-\w]+)/$', 'tag'),

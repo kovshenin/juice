@@ -8,6 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.core.paginator import Paginator
+from django.conf import settings
 
 from juice.posts.models import Post
 from juice.comments.models import Comment, CommentForm
@@ -20,93 +21,31 @@ from juice.front.permalinks import make_permalink
 
 # homepage
 def index(request, page=1):
-	page = int(page)-1
-	
-	try:
-		posts = Post.objects.all().order_by('-published')[page:10]
-	except:
-		raise Http404
-	
-	# is there anything left?
-	if posts.count() == 0 & page > 0:
-		raise Http404
-
-	pages = Page.tree.all()
-	tags = Term.objects.filter(taxonomy="tag")
-	categories = Term.objects.filter(taxonomy="category")
-	
-	posts_ctype = ContentType.objects.get_for_model(Post)
-	
-	# set the permalinks
-	for page in pages:
-		page.permalink = make_permalink(page)
-	for post in posts:
-		post.permalink = make_permalink(post)
-		post.comments_count = Comment.objects.filter(content_type__pk=posts_ctype.id, object_id=post.id).count()
-	for tag in tags:
-		tag.permalink = make_permalink(tag)
-	for category in categories:
-		category.permalink = make_permalink(category)
-	
-	ContactForm = juice.forms.models.FormsAPI.create_form_by_slug('contact-form')	
-	if request.method == 'POST':
-		contact_form = ContactForm(request.POST)
-		if contact_form.is_valid():
-			
-			# Save the uploaded file
-			cv = request.FILES['cv']
-			dest = open(cv.name, 'wb+')
-			for chunk in cv.chunks():
-				dest.write(chunk)
-			dest.close()
-			
-			contact_form = ContactForm()
-	else:
-		contact_form = ContactForm()	
-
-	return render('home.html', {'posts': posts, 'pages': pages, 'tags': tags, 'categories': categories, 'contact_form': contact_form}, context_instance=RequestContext(request))
-	
-# posts list
-def posts(request, page=1):
 	posts_list = Post.objects.all().order_by('-published')
-	paginator = Paginator(posts_list, 10)
+	paginator = Paginator(posts_list, 5)
 	
 	try:
 		p = paginator.page(page)
 	except (EmptyPage, InvalidPage):
 		p = paginator.page(paginator.num_pages)
 		
-	p.next_link = reverse('juice.front.views.posts', kwargs={'page': p.next_page_number()})
-	p.previous_link = reverse('juice.front.views.posts', kwargs={'page': p.previous_page_number()})
-		
 	posts = p.object_list
-	ctype = ContentType.objects.get_for_model(Post)
-	
-	for post in posts:
-		# read the relations with posts and terms
-		rel_tags = TermRelation.objects.filter(content_type__pk=ctype.id, object_id=post.id, term__taxonomy='tag')
-		rel_categories = TermRelation.objects.filter(content_type__pk=ctype.id, object_id=post.id, term__taxonomy='category')
-		
-		post.tags = []
-		post.categories = []
 
-		for tag in rel_tags:
-			tag.term.permalink = make_permalink(tag.term)
-			post.tags.append(tag.term)
-		for category in rel_categories:
-			category.term.permalink = make_permalink(category.term)
-			post.categories.append(category.term)
-		
-		post.permalink = make_permalink(post)
-			
-	return render('posts.html', {'posts': posts, 'paginator': p}, context_instance=RequestContext(request))
+	p.next_link = reverse('juice.front.views.index', kwargs={'page': p.next_page_number()})
+	p.previous_link = reverse('juice.front.views.index', kwargs={'page': p.previous_page_number()})
 	
+	posts_ctype = ContentType.objects.get_for_model(Post)
+
+	for post in posts:
+		post.permalink = make_permalink(post)
+		post.comments_count = Comment.objects.filter(content_type__pk=posts_ctype.id, object_id=post.id).count()
+
+	return render('home.html', {'posts': posts, 'paginator': p}, context_instance=RequestContext(request))
 	
 # single post view
 def single(request, post_slug):
 	p = Post.objects.get(slug=post_slug)
-	ctype = ContentType.objects.get_for_model(Post)
-	
+	ctype = ContentType.objects.get_for_model(Post)	
 	
 	# read the relations with posts and terms
 	rel_tags = TermRelation.objects.filter(content_type__pk=ctype.id, object_id=p.id, term__taxonomy='tag')
@@ -189,14 +128,15 @@ def tag(request, tag_slug, page=1):
 # single page view
 def page(request, page_slug, page_id=False):
 	if page_id:
-		p = Page.objects.get(id=page_id)
+		page = Page.objects.get(id=page_id)
 	else:
-		p = Page.objects.get(slug=page_slug)
-		
+		page = Page.objects.get(slug=page_slug)
+
 	from juice.front.shortcodes import shortcodes
-	p.content = shortcodes.apply(p.content, request)
+	page.content = shortcodes.apply(page.content, request)
+	page.permalink = make_permalink(page)
 	
-	return render('page.html', {'page': p}, context_instance=RequestContext(request))
+	return render('page.html', {'page': page}, context_instance=RequestContext(request))
 
 # This function routes all requests that didn't match any regex
 def route(request, slug):
@@ -245,13 +185,12 @@ def render(template_name, context={}, **kwargs):
 		'home': make_permalink(),
 		'navigation': {
 			'main': main_menu,
-			'tray': [
-				{'title': 'Home', 'permalink': make_permalink()},
-				{'title': 'Blog', 'permalink': '/posts/'},
-				{'title': 'Services', 'permalink': '/services/'},
+			'topright': [
+				{'title': 'Sitemap', 'permalink': '/sitemap/'},
 				{'title': 'About', 'permalink': '/about/'},
+				{'title': 'Feedback', 'permalink': '/feedback/'},
 			]
 		},
 	}
 	
-	return render_to_response(template_name, context, **kwargs)
+	return render_to_response("%s/%s" % (settings.JUICE_THEME, template_name), context, **kwargs)

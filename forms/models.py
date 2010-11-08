@@ -46,6 +46,7 @@ class FormField(models.Model):
 		('c', 'Checkbox'),
 		('r', 'Radio'),
 		('f', 'File Attachment'),
+		('h', 'Hidden'),
 		('x', 'Submit'),
 	))
 	attributes = models.TextField(blank=True)
@@ -62,13 +63,15 @@ class FormField(models.Model):
 # Factory. The Action pool is essential to the Forms API which will tell
 # what type of actions we'd like the form to produce on submit (email, etc).
 class FormsAPI():
-	
+
+	actions = {}
+
 	# The following create methods are used to lookup forms in the database
 	# parse their attributes and fields, and give out a valid form class
 	# which could be used anywhere.
 	
 	@staticmethod
-	def create_form_by_id(form_id):
+	def by_id(form_id):
 		try:
 			form = Form.objects.get(id=form_id)
 			return FormsAPI.create_form(form)
@@ -76,7 +79,7 @@ class FormsAPI():
 			pass
 		
 	@staticmethod
-	def create_form_by_title(form_title):
+	def by_title(form_title):
 		try:
 			form = Form.objects.get(title=form_title)
 			return FormsAPI.create_form(form)
@@ -84,7 +87,7 @@ class FormsAPI():
 			pass
 		
 	@staticmethod
-	def create_form_by_slug(form_slug):
+	def by_slug(form_slug):
 		try:
 			form = Form.objects.get(slug=form_slug)
 			return FormsAPI.create_form(form)
@@ -131,12 +134,14 @@ class FormsAPI():
 						self.fields[field.name] = forms.ChoiceField(choices=field_choices, required=field.required, widget=forms.RadioSelect, label=field.caption)
 					elif field.type == 'f': # File
 						self.fields[field.name] = forms.FileField(label=field.caption, required=field.required)
+					elif field.type == 'h': # Hidden
+						self.fields[field.name] = forms.CharField(max_length=255, required=field.required, label=field.caption, widget=forms.HiddenInput)
 					elif field.type == 'x': # Submit button
 						self.extra.append('<input type="submit" name="%s" value="%s" />' % (field.name, field.caption))
 			
 			# In case we'd like to print this form.
 			def __unicode__(self):
-				return self.title
+				return self.as_p()
 			
 			# Rewrite the default django forms as_p statement to include
 			# a div container around the form, the form tag, the form contents
@@ -150,6 +155,27 @@ class FormsAPI():
 								</form>
 							</div>""" % {'form_slug': self.slug, 'form_contents': super(_FutureForm, self).as_p(), 'form_extra': ' '.join(self.extra)}
 				return result
+				
+			def get_extra(self):
+				return "%s" % '\n'.join(self.extra)
+				
+			def as_custom(self):
+				template = """
+					<div class="juice-form form-%(form_slug)s">
+						<form method="post">
+							{% for field in form %}
+								<div class="fieldWrapper">
+									{{ field.errors }}
+									{{ field.label_tag }}: {{ field }}
+								</div>
+							{% endfor %}
+							<p><input type="submit" value="Send message" /></p>
+						</form>
+					</div>
+					"""
+				
+				
+
 		
 		# Once the future form is constructed, return it.
 		return _FutureForm
@@ -159,18 +185,40 @@ class FormsAPI():
 	# of available actions that will be carried out on form submission.
 	# Meanwhile we simply write to the debug log.
 	@staticmethod
-	def process_form(form_class, request):
+	def process_form(form_class, request, **kwargs):
 		CustomForm = form_class
-		if request != None and request.method == 'POST':
-			form = CustomForm(request.POST)
-			if form.is_valid():
-				# @todo Action here
-				debug("Submitted: %s" % form)
-				form = CustomForm()
-		else:
-			form = CustomForm()
+		ids_format = "%s-%%s" % CustomForm.slug
+		feedback = []
 		
-		return form
+		if request != None and request.method == 'POST':
+			form = CustomForm(request.POST, auto_id=ids_format)
+			if form.is_valid():
+				# Are there any form processors?
+				if form.slug in FormsAPI.actions:
+					actions = FormsAPI.actions[form.slug]
+					for func in actions:
+						feedback.append(func(form, **kwargs))
+						
+				# Carry out the actions applied to all forms with *
+				# This and the above could be combined some day.
+				if '*' in FormsAPI.actions:
+					actions = FormsAPI.actions['*']
+					for func in actions:
+						feedback.append(func(form, **kwargs))
+
+				debug("Submitted: %s" % form.slug)
+				form = CustomForm(auto_id=ids_format)
+		else:
+			form = CustomForm(auto_id=ids_format)
+		
+		if kwargs.get("feedback") or False:
+			# Remove empty feedback
+			for k,v in enumerate(feedback):
+				if not v:
+					del feedback[k]
+			return form, feedback
+		else:
+			return form
 		
 	# Do not call this static method directly unless you're 100% sure
 	# about what you're doing. This tends to use the Juice Shortcode API
@@ -188,13 +236,13 @@ class FormsAPI():
 		# to identify the form.
 		
 		if id != None:
-			NewForm = FormsAPI.create_form_by_id(int(id))
+			NewForm = FormsAPI.by_id(int(id))
 
 		elif slug != None:
-			NewForm = FormsAPI.create_form_by_slug(slug)
+			NewForm = FormsAPI.by_slug(slug)
 			
 		elif title != None:
-			NewForm = FormsAPI.create_form_by_title(title)
+			NewForm = FormsAPI.by_title(title)
 		
 		# Fire a form processing passing on the request. If the request
 		# hasn't submitted any form data, process_form will return a new
@@ -207,6 +255,17 @@ class FormsAPI():
 			return form.as_p()
 		else:
 			return kwargs.__unicode__()
+	
+	# The following static method allows modules to add new actions to
+	# form processors. Input is the form slug and a function, which will
+	# be called when a form receives a valid submission. The function called
+	# is passed the form object.
+	@staticmethod
+	def add_action(form_slug, func):
+		if form_slug in FormsAPI.actions:
+			FormsAPI.actions[form_slug].append(func)
+		else:
+			FormsAPI.actions[form_slug] = (func,)
 
 # Using the Shortcodes API (juice.front.shortcodes) add a new shortcode
 # called form. The general usage is: 
@@ -219,4 +278,12 @@ shortcodes.add("form", FormsAPI.shortcode)
 # Use this to accept non-static methods in the Forms API
 # Reserved for the action pool which will be worked out at a later
 # stage.
-api = FormsAPI()
+# Update: The action pool is a static attribute inside FormsAPI, so api
+# is no longer needed. Will be removed.
+#api = FormsAPI()
+
+# The following is a sample of how do add custom form processors
+def form_debug(form, **kwargs):
+	debug("Form debug: %s" % form.slug)
+	
+FormsAPI.add_action('*', form_debug)

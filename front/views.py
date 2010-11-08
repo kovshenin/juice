@@ -11,14 +11,14 @@ from django.core.paginator import Paginator
 from django.conf import settings
 
 from juice.posts.models import Post
-from juice.comments.models import Comment, CommentForm
+from juice.comments.models import Comment
 from juice.taxonomy.models import Term, TermRelation
 from juice.pages.models import Page
 from juice.navigation.models import Menu
 from juice.front.shortcodes import shortcodes
+from juice.front.debug import debug
 
-import juice.forms.models
-
+from juice.forms.models import FormsAPI
 from juice.front.permalinks import make_permalink
 
 # homepage
@@ -48,14 +48,14 @@ def index(request, page=1):
 # single post view
 def single(request, post_slug):
 	p = Post.objects.get(slug=post_slug, published__lte=datetime.now())
-	ctype = ContentType.objects.get_for_model(Post)	
+	p.ctype = ContentType.objects.get_for_model(Post)
 	
 	# Apply the shortcodes to the post content
 	p.content = shortcodes.apply(p.content, request)
 	
 	# read the relations with posts and terms
-	rel_tags = TermRelation.objects.filter(content_type__pk=ctype.id, object_id=p.id, term__taxonomy='tag')
-	rel_categories = TermRelation.objects.filter(content_type__pk=ctype.id, object_id=p.id, term__taxonomy='category')
+	rel_tags = TermRelation.objects.filter(content_type__pk=p.ctype.id, object_id=p.id, term__taxonomy='tag')
+	rel_categories = TermRelation.objects.filter(content_type__pk=p.ctype.id, object_id=p.id, term__taxonomy='category')
 	
 	p.tags = []
 	p.categories = []
@@ -65,32 +65,6 @@ def single(request, post_slug):
 	for category in rel_categories:
 		p.categories.append(category.term)
 	
-	# form processing
-	if request.method == 'POST':
-		comment_form = CommentForm(request.POST)
-		if comment_form.is_valid():
-			comment = Comment(
-				name=comment_form.cleaned_data['name'],
-				email=comment_form.cleaned_data['email'],
-				url=comment_form.cleaned_data['url'],
-				twitter=comment_form.cleaned_data['twitter'],
-				content=comment_form.cleaned_data['content'],
-				author=User.objects.get(id=1),
-				published=datetime.datetime.now(),
-				content_object=p
-			)
-			
-			try:
-				parent_comment = Comment.objects.get(id=int(comment_form.cleaned_data['parent']))
-				comment.parent = parent_comment
-			except:
-				pass
-			
-			comment.save()
-			comment_form = CommentForm()
-	else:
-		comment_form = CommentForm()
-	
 	# set the permalinks
 	p.permalink = make_permalink(p)
 	for c in p.categories:
@@ -99,7 +73,7 @@ def single(request, post_slug):
 		t.permalink = make_permalink(t)
 		
 	# comments
-	p.comments = Comment.tree.filter(content_type__pk=ctype.id, object_id=p.id)
+	p.comments = Comment.tree.filter(content_type__pk=p.ctype.id, object_id=p.id)
 	
 	for c in p.comments:
 		c.permalink = make_permalink(c)
@@ -107,8 +81,17 @@ def single(request, post_slug):
 	
 	p.comments_count = p.comments.count()
 	
-	return render('post.html', {'post': p, 'comment_form': comment_form}, context_instance=RequestContext(request))
+	CommentForm = FormsAPI.by_slug('comment-form')
+	comment_form, feedback = FormsAPI.process_form(CommentForm, request, content_object=p, feedback=True)
 	
+	for entry in feedback:
+		action, arg = entry
+		if action == "redirect_to":
+			return HttpResponseRedirect(arg)
+	
+	return render('post.html', {'post': p, 'comment_form': comment_form}, context_instance=RequestContext(request))
+
+
 # view posts by category
 def category(request, category_slug, page=1):
 	page = int(page)-1
@@ -206,4 +189,34 @@ def render(template_name, context={}, **kwargs):
 	# Render the final response based on the JUICE_THEME Django setting. Note that this structure
 	# is mandatory for Juice templates to work correctly. If you're looking to change URL styles
 	# to access dynamic and static data, use the permalinks.py file and urls.py respectively.
-	return render_to_response("%s/%s" % (settings.JUICE_THEME, template_name), context, **kwargs)
+	return render_to_response(template_name, context, **kwargs)
+
+# Comment form action
+def comment_form_action(form_object, **kwargs):
+	obj = kwargs.get("content_object") or False
+	
+	if not obj:
+		return
+
+	comment_form = form_object
+	comment = Comment(
+		name=comment_form.cleaned_data['name'],
+		email=comment_form.cleaned_data['email'],
+		url=comment_form.cleaned_data['url'],
+		twitter=comment_form.cleaned_data['twitter'],
+		content=comment_form.cleaned_data['content'],
+		author=User.objects.get(id=1),
+		published=datetime.now(),
+		content_object=obj,
+	)
+	
+	try:
+		parent_comment = Comment.objects.get(id=int(comment_form.cleaned_data['parent']))
+		comment.parent = parent_comment
+	except:
+		pass
+	
+	comment.save()
+	return ('redirect_to', "%s#div-comment-%s" % (obj.permalink, comment.id))
+
+FormsAPI.add_action('comment-form', comment_form_action)

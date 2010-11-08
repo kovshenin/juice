@@ -41,8 +41,6 @@ class ShortcodeAPI():
 			if request:
 				args['request'] = request
 			
-			parsed = re.sub(r'\[' + item + r'\]', 'aaa%saaa' % name, parsed)
-			
 			# Parse only shortcodes that were register with shortcodes.add
 			if name in self.shortcodes:
 				func = self.shortcodes[name]

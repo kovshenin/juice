@@ -94,6 +94,7 @@ INSTALLED_APPS = (
 	
 	'mptt',
 
+	'juice.core',
 	'juice.front',
 	'juice.posts',
 	'juice.pages',
@@ -103,6 +104,7 @@ INSTALLED_APPS = (
 	'juice.analytics',
 	'juice.chunks',
 	'juice.navigation',
+	'juice.social',
 )
 
 LOG_FILE = '/tmp/juice.log'

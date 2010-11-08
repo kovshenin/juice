@@ -41,12 +41,14 @@ class ShortcodeAPI():
 			if request:
 				args['request'] = request
 			
+			parsed = re.sub(r'\[' + item + r'\]', 'aaa%saaa' % name, parsed)
+			
 			# Parse only shortcodes that were register with shortcodes.add
 			if name in self.shortcodes:
 				func = self.shortcodes[name]
 				result = func(args)
-				parsed = re.sub(r'\[' + item + r'\]', result, parsed)
-				
+				parsed = re.sub(r'\[' + re.escape(item) + r'\]', result, parsed)
+			
 		return parsed
 	
 	# Private method to parse shortcode attributes.
@@ -79,3 +81,34 @@ class ShortcodeAPI():
 
 # This is the only instance of the ShortcodeAPI to be used outside this module.
 shortcodes = ShortcodeAPI()
+
+# Common shortcodes
+class CommonShortcodes():
+
+	@staticmethod
+	def youtube(kwargs):
+		url = kwargs.get("url").__str__()
+		width = kwargs.get("width") or 640
+		height = kwargs.get("height") or 384
+		
+		youtube_id = re.search(r'v=(.{11})', url).group(1)
+		
+		if url != None:
+			return """
+				<span class="youtube-video video" style="width: %(width)spx; height: %(height)spx;">
+					<object width="%(width)s" height="%(height)s">
+						<param name="movie" value="http://www.youtube.com/v/%(id)s?fs=1&amp;hl=en_US&amp;rel=0"></param>
+						<param name="allowFullScreen" value="true"></param>
+						<param name="allowscriptaccess" value="always"></param>
+						<embed src="http://www.youtube.com/v/%(id)s?fs=1&amp;hl=en_US&amp;rel=0" 
+							type="application/x-shockwave-flash" 
+							allowscriptaccess="always" 
+							allowfullscreen="true" 
+							width="%(width)s" 
+							height="%(height)s">
+						</embed>
+					</object>
+				</span>
+				""" % {'id': youtube_id, 'width': width, 'height': height}
+
+shortcodes.add('youtube', CommonShortcodes.youtube)

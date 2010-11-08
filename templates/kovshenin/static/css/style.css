@@ -440,3 +440,14 @@ acronym, abbr {
 #sidebar_extended {
 	display: none;
 }
+
+.post .video {
+	display: block;
+	margin: 10px auto;
+	max-width: 100%;
+	visibility: visible !important;
+}
+
+.video object {
+	max-width: 100%;
+}

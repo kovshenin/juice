@@ -15,6 +15,7 @@ from juice.comments.models import Comment, CommentForm
 from juice.taxonomy.models import Term, TermRelation
 from juice.pages.models import Page
 from juice.navigation.models import Menu
+from juice.front.shortcodes import shortcodes
 
 import juice.forms.models
 
@@ -40,6 +41,7 @@ def index(request, page=1):
 	for post in posts:
 		post.permalink = make_permalink(post)
 		post.comments_count = Comment.objects.filter(content_type__pk=posts_ctype.id, object_id=post.id).count()
+		post.content = shortcodes.apply(post.content, request)
 
 	return render('home.html', {'posts': posts, 'paginator': p}, context_instance=RequestContext(request))
 	
@@ -47,6 +49,9 @@ def index(request, page=1):
 def single(request, post_slug):
 	p = Post.objects.get(slug=post_slug, published__lte=datetime.now())
 	ctype = ContentType.objects.get_for_model(Post)	
+	
+	# Apply the shortcodes to the post content
+	p.content = shortcodes.apply(p.content, request)
 	
 	# read the relations with posts and terms
 	rel_tags = TermRelation.objects.filter(content_type__pk=ctype.id, object_id=p.id, term__taxonomy='tag')
@@ -133,7 +138,6 @@ def page(request, page_slug, page_id=False):
 	else:
 		page = Page.objects.get(slug=page_slug)
 
-	from juice.front.shortcodes import shortcodes
 	page.content = shortcodes.apply(page.content, request)
 	page.permalink = make_permalink(page)
 	

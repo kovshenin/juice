@@ -1,0 +1,85 @@
+{% load humanize %}
+{% load mptt_tags %}
+
+{# Load some additional javascript #}
+{% block scripts %}
+<script>
+	function moveForm(div_id, comment_id) {
+		form = $("#respond").detach();
+		$("#comment-form-parent", form).val(comment_id);
+		$("#" + div_id + " .reply").append(form);
+		$("#cancel-comment-reply-link").show();
+		return false;
+	}
+	
+	$('#cancel-comment-reply-link').live('click', function() {
+		form = $("#respond").detach();
+		$(form).insertAfter("#temp-respond");
+		$("#cancel-comment-reply-link").hide();
+		return false;
+	});
+</script>
+{{ block.super }}
+{% endblock %}
+
+{# Comments Template #}
+<div class="comments-template">
+	<h3 id="comments">{{ obj.comments.count }} response{{ obj.comments.count|pluralize }} to &laquo;{{ obj.title }}&raquo;</h3>
+	{% if obj.comments %}
+	<ol class="commentlist">
+		{# Threaded comments #}
+		{% for comment,structure in obj.comments|tree_info %}
+			{# The reason we're having these nested statements is that parent nodes are children of ol nodes (written above) and #}
+			{# children (replies to comments) are nested inside ul nodes (declared inside the loop) #}
+			{% if structure.new_level and comment.level %}<ul class="children"><li>{% else %}{% if comment.level > 0 %}</li>{% endif %}<li>{% endif %}
+			
+				<div id="div-comment-{{ comment.id }}" class="comment-body">
+					<div class="comment-author vcard">
+						<a href="#"><img alt="" src="{{ comment.avatar }}?s=32" class="avatar avatar-32 photo" height="32" width="32" /></a>
+						<cite class="fn"><a href="#" rel="external nofollow" class="url">{{ comment.name }}</a></cite>
+					</div>
+					<div class="comment-meta commentmetadata">{{ comment.published }}</div>
+					<p>{{ comment.content }}</p>
+					
+					<div class="reply">
+						<a rel="nofollow" class="comment-reply-link" href="#respond" onclick='return moveForm("div-comment-{{ comment.id }}", "{{ comment.id }}")'>Reply</a>
+					</div>
+				</div>
+
+			{% for level in structure.closed_levels %}</li>{% if level > 0 %}</ul>{% endif %}{% endfor %}
+		{% endfor %}
+	</ol>
+	{% endif %}
+	
+	{# Respond #}
+	<div id="temp-respond" style="display: none;"></div>
+	<div id="respond">
+		<h3><a href="#reply" name="reply">Leave a Reply</a></h3>
+		<div class="cancel-comment-reply">
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="#" style="display:none;">Click here to cancel reply.</a></small>
+		</div>
+
+		<form action="{{ obj.permalink }}#reply" method="post" id="comment-form">
+			{% for field in comment_form.visible_fields %}
+				<p>
+					{{ field }}
+					{{ field.label_tag }}
+					{% for error in field.errors %}
+						<label style="color: red">{{ error }}</label>
+					{% endfor %}
+				</p>
+			{% endfor %}
+			<p style="clear: both;" class="subscribe-to-comments">
+				<input type="checkbox" name="subscribe" id="subscribe" value="subscribe" style="width: auto;" />
+				<label for="subscribe">Notify me of followup comments via e-mail</label>
+			</p>
+			<p>
+				{% for field in comment_form.hidden_fields %}
+					{{ field }}
+				{% endfor %}
+				<input type="hidden" name="source_url" value="{{ obj.permalink }}" />
+				{{ comment_form.get_extra|safe }}
+			</p>
+		</form>
+	</div>
+</div>

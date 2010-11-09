@@ -39,6 +39,14 @@ a.bookmark {
 	text-transform: lowercase;
 }
 
+.logo .slogan {
+	font-size: 0.5em;
+	color: #666; 
+	position: relative; 
+	left: 4px; 
+	top: -12px;
+}
+
 .logo span {
 	margin-left: -20px;
 	margin-top: -6px;

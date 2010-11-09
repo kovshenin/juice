@@ -40,6 +40,7 @@ def index(request, page=1):
 
 	for post in posts:
 		post.permalink = make_permalink(post)
+		post.permalink_abs = make_permalink(post, absolute=True, request=request)
 		post.comments_count = Comment.objects.filter(content_type__pk=posts_ctype.id, object_id=post.id).count()
 		post.content = shortcodes.apply(post.content, request)
 
@@ -183,7 +184,8 @@ def render(template_name, context={}, **kwargs):
 	context['global'] = {
 		'title': 'Juice',
 		'home': make_permalink(),
-		'navigation': navigation
+		'navigation': navigation,
+		'tags': Term.objects.filter(taxonomy='category')
 	}
 	
 	# Render the final response based on the JUICE_THEME Django setting. Note that this structure

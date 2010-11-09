@@ -40,9 +40,9 @@ a.bookmark {
 }
 
 .logo span {
-	margin-left: -32px;
+	margin-left: -20px;
 	margin-top: -6px;
-	font-size: 1.5em;
+	font-size: 1.7em;
 	color: #ccc;
 }
 
@@ -238,8 +238,23 @@ a.bookmark {
 
 .post .meta .share {
 	float: right;
-	margin-top:3px;
-	margin-left: 10px;
+	margin-top:10px;
+	margin-left: 4px;
+}
+
+.share a {
+	display: inline;
+	position: relative;
+	margin-left: 2px;
+	-moz-opacity:.30;
+	filter:alpha(opacity=30);
+	opacity:.30;
+}
+
+.share a:hover {
+	-moz-opacity:1;
+	filter:alpha(opacity=100);
+	opacity:1;
 }
 
 span.tagged {
@@ -390,7 +405,7 @@ a {
 	color: black;
 }
 
-p {
+p,.content {
 	line-height: 1.3em;
 }
 
@@ -422,18 +437,6 @@ acronym, abbr {
 	margin-top: 58px !important;
 	padding: 0 !important;
 	letter-spacing: -1px;
-}
-
-.sociable {
-	display: inline;
-	position: relative;
-	top: 1px;
-}
-
-.post .meta .share a.retweet-anywhere {
-	position: relative;
-	margin-left: 8px;
-	top: 2px;
 }
 
 /* Animations etc */

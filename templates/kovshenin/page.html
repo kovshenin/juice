@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load humanize %}
+{% load social %}
 {% block content %}
 	<div class="post page-{{ page.id }}">
 		<h1><a href="{{ page.permalink }}" rel="bookmark" title="Permanent Link to {{ page.title }}">{{ page.title }}</a></h1>
@@ -9,14 +10,11 @@
 
 		<div class="meta">
 			<div class="share">
-				<a href="http://twitter.com/?status=Amazon+Web+Services%3A+Cloud+Computing+Free+of+Charge+http%3A%2F%2Fkovshenin.com%2F%3Fp%3D2608" class="retweet-anywhere" title="Retweet This Post" rev="" rel="2608"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/retweet.png" alt="Retweet" /></a>
-				<!--<fb:like layout="button_count" show_faces="false" width="90" font="tahoma" href="http://kovshenin.com/archives/amazon-web-services-cloud-computing-free-of-charge/"></fb:like>-->
+				{% social "juice-social-share" page %}
 			</div>
 
 			<p class="links">
-				<a href="{{ page.permalink }}" rel="bookmark" title="Permanent Link to {{ page.title }}">Permalink</a>, 
-				<a href="{{ page.permalink }}#comments" title="Comment on {{ page.title }}">comment ({{ page.comments_count }})</a> 
-				or share:
+				Share:
 			</p>
 		</div>
 	</div>

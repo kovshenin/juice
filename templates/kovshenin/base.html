@@ -1,4 +1,6 @@
 {% load chunks %}
+{% load social %}
+{% load taxonomy %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
 			<head profile="http://gmpg.org/xfn/11">
@@ -19,7 +21,7 @@
 	<div id="head">
 		<div class="container_12">
 			<div class="grid_9 logo">
-				<span>&lt;?</span><h1><a href="{{ global.home }}">{% chunk "title" %}</a></h1>
+				<span>&#167;</span><h1><a href="{{ global.home }}">{% chunk "title" %}</a></h1>
 
 			</div>
 			<div class="grid_3 search">
@@ -101,29 +103,15 @@
 			<div class="grid_3 sidebar">
 				{% block sidebar %}
 				<div class="social">
-					<a href="http://kovshenin.com/feed/"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/rss.png" alt="RSS feed" /></a>
-					<a href="http://twitter.com/kovshenin"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/twitter.png" alt="Twitter" /></a>
-					<a href="http://www.linkedin.com/in/kovshenin"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/linkedin.png" alt="Linked In" /></a>
-					<a href="http://facebook.com/kovshenin"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/facebook.png" alt="Facebook" /></a>
-					<a href="http://digg.com/users/kovshenin"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/digg.png" alt="Digg" /></a>
-					<a href="http://kovshenin.deviantart.com/gallery"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/deviantart.png" alt="DeviantArt" /></a><br />
-					<a href="http://delicious.com/kovshenin"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/delicious.png" alt="Delicious" /></a>
-					<a href="http://www.youtube.com/user/kovshenin"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/youtube.png" alt="YouTube" /></a>
-					<a href="http://flickr.com/photos/kovshenin"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/flickr.png" alt="Flickr" /></a>
-					<a href="http://technorati.com/blogs/kovshenin.com"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/technorati.png" alt="Technorati" /></a>
-					<a href="http://last.fm/user/kovshenin"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/lastfm.png" alt="Last.fm" /></a>			
-					<a href="http://myspace.com/kovshenin"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/social2/myspace.png" alt="MySpace" /></a>
-
+					{% social "juice-social-profiles" %}
 					<div class="tag-cloud">
 						<!-- Tag cloud goes here -->
+						{% taxonomy_cloud global.tags %}
 					</div>
 				</div>
 
 				<div class="bio">
-					<a href="http://kovshenin.com/about/">
-						<img alt="Konstantin Kovshenin" src="/static/images/me.jpg" />
-					</a>
-					<p>Hi! I'm Konstantin, a web developer from Moscow, Russia. CTO at <a href="http://frumatic.com">Frumatic</a><br /><a href="http://kovshenin.com/about/">More</a> &raquo;</p>
+					{% chunk "short-bio" %}
 				</div>
 
 				<div class="more">

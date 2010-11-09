@@ -12,14 +12,12 @@
 
 			<div class="meta">
 				<div class="share">
-					{% social_share post.permalink %}
-					<!--<a href="http://twitter.com/?status=Amazon+Web+Services%3A+Cloud+Computing+Free+of+Charge+http%3A%2F%2Fkovshenin.com%2F%3Fp%3D2608" class="retweet-anywhere" title="Retweet This Post" rev="" rel="2608"><img src="http://kovshenin.com/core/wp-content/themes/kovshenin-960/images/retweet.png" alt="Retweet" /></a>-->
-					<!--<fb:like layout="button_count" show_faces="false" width="90" font="tahoma" href="http://kovshenin.com/archives/amazon-web-services-cloud-computing-free-of-charge/"></fb:like>-->
+					{% social "juice-social-share" post %}
 				</div>
 
 				<p class="links">
 					<a href="{{ post.permalink }}" rel="bookmark" title="Permanent Link to {{ post.title }}">Permalink</a>, 
-					<a href="{{ post.permalink }}#comments" title="Comment on {{ post.title }}">comment ({{ post.comments_count }})</a> 
+					<a href="{{ post.permalink }}#comments" title="Comment on {{ post.title }}">comment ({{ post.comments_count }})</a>
 					or share:
 				</p>
 			</div>

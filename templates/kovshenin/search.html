@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% load humanize %}
+
+{% block content %}
+	<div class="post">
+		<h1><a href="#">Search results for: {{ meta.query }}</a></h1>
+		<p>Found</p>
+	</div>
+	{% for post in results %}
+	<div class="post post-{{ post.id }}">
+		<strong style="font-size: 1.2em; font-weight: normal"><a href="{{ post.permalink }}" rel="bookmark" title="Permanent Link to {{ post.title }}">{{ post.title }}</a></strong>
+		{# Assuming the content is valid html and surrounded by <p> tags #}
+		<p style="margin-top: 0">
+			{{ post.content|striptags|truncatewords:20 }}
+			<br /><a href="#" style="font-size: 0.9em; color: #777">{{ post.permalink }}</a>
+		</p>
+		<div class="meta">
+		</div>
+	</div>
+	<div class="clear"></div>
+	{% endfor %}
+
+{% endblock %}

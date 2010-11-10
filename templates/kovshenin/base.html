@@ -30,8 +30,8 @@
 						<a href="{{ item.permalink }}">{{ item.caption }}</a>{% if not forloop.last %}, {% endif %}
 					{% endfor %}
 				</p>
-				<form method="get" id="searchform" action="{{ global.home }}">
-					<input type="text" value="" name="search" id="s" />
+				<form method="get" id="searchform" action="{% url juice.front.views.search %}">
+					<input type="text" value="" name="q" id="s" />
 					<input type="submit" style="display: none" />
 				</form>
 			</div>

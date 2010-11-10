@@ -12,6 +12,7 @@
 # the shortcodes.apply method, which could optionally accept a request argument
 # to pass request data (such as POST data for forms) to your shortcode handler
 import re
+from juice.front.debug import debug
 
 # Don't use this class directly, it is initiated at the end for general
 # usage. The classes shortcodes property holds the currently active
@@ -108,5 +109,21 @@ class CommonShortcodes():
 					</object>
 				</span>
 				""" % {'id': youtube_id, 'width': width, 'height': height}
+				
+	@staticmethod
+	def snippet(kwargs):
+		from django import template
+		from django.template.loader import get_template
+
+		snippet_name = kwargs.get("name") or False
+		context = template.Context(kwargs)
+		try:
+			tp = get_template("snippets/%s" % snippet_name)
+		except:
+			return "Snippet %s not found!" % snippet_name
+
+		return tp.render(context)
+
 
 shortcodes.add('youtube', CommonShortcodes.youtube)
+shortcodes.add('snippet', CommonShortcodes.snippet)

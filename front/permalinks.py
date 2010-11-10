@@ -9,6 +9,9 @@ def get_patterns():
 		(r'^posts/(?P<post_slug>[-\w]+)/$', 'single'),
 		(r'^category/(?P<category_slug>[-\w/]+)/$', 'category'),
 		(r'^tag/(?P<tag_slug>[-\w]+)/$', 'tag'),
+		
+		(r'^search/$', 'search'),		
+		
 		(r'^(?P<slug>[-\w\/]+)/$', 'route'),
 
 		# This is pseudo and is never reached as route is already defined.

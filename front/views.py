@@ -46,6 +46,37 @@ def index(request, page=1):
 
 	return render('home.html', {'posts': posts, 'paginator': p}, context_instance=RequestContext(request))
 	
+def search(request):
+	query = request.GET.get('q')
+	page = request.GET.get('page') or 1
+	
+	from django.db.models import Q
+	import operator
+	
+	words = query.split(' ')
+	qs = []
+	
+	for word in words:
+		qs.append(Q(title__icontains=word))
+		qs.append(Q(content__icontains=word))
+	
+	posts = Post.objects.filter(reduce(operator.or_, qs))
+	paginator = Paginator(posts, 5)
+	
+	try:
+		p = paginator.page(page)
+	except (EmptyPage, InvalidPage):
+		p = paginator.page(paginator.num_pages)
+		
+	results = p.object_list
+	
+	for result in results:
+		result.permalink = make_permalink(result, absolute=True, request=request)
+	
+	meta = {'query': query}
+	
+	return render('search.html', {'results': results, 'meta': meta, 'paginator': p}, context_instance=RequestContext(request))
+
 # single post view
 def single(request, post_slug):
 	p = Post.objects.get(slug=post_slug, published__lte=datetime.now())

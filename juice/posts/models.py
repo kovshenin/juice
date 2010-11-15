@@ -31,8 +31,8 @@ from google.appengine.api import users
 class Post(db.Model):
 	title = db.StringProperty("Post Title")
 	slug = db.StringProperty("Post Slug")
-	excerpt = db.StringProperty("Post Excerpt", multiline=True)
-	content = db.StringProperty("Post Content", multiline=True)
+	excerpt = db.TextProperty("Post Excerpt")
+	content = db.TextProperty("Post Content")
 	
 	published = db.DateTimeProperty("Published", auto_now_add=True)
 	updated = db.DateTimeProperty("Updated", auto_now_add=True, auto_now=True)

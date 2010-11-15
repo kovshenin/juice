@@ -1,4 +1,6 @@
+"""
 # Taxonomy Module
+# Django
 
 from django.db import models
 from mptt.models import MPTTModel
@@ -47,3 +49,17 @@ class TermRelation(models.Model):
 		return model.objects.raw('SELECT %(objects)s.* FROM %(objects)s JOIN %(relations)s ON %(objects)s.id = %(relations)s.object_id AND %(relations)s.content_type_id = %(content_type)s JOIN %(terms)s ON %(relations)s.term_id = %(terms)s.id WHERE %(terms)s.id = %(term_id)s %(order_by)s' % data)
 
 #mptt.register(Term)
+"""
+
+# Google AppEngine
+
+from google.appengine.ext import db
+
+class Term(db.Model):
+	taxonomy = db.StringProperty(required=True)
+	name = db.StringProperty(required=True)
+	slug = db.StringProperty(required=True)
+	description = db.StringProperty(multiline=True)
+	
+	parent_term = db.SelfReferenceProperty("Parent")
+	relations = db.ListProperty(db.Key) # Many-to-many for AppEngine

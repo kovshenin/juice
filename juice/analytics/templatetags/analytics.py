@@ -25,8 +25,9 @@ def yandex_metrica(parser, token):
 	
 class GoogleAnalyticsNode(template.Node):
 	def __init__(self, auth):
-		self.auth = auth
-	def render(self, context):		
+		self.auth = template.Variable(auth)
+	def render(self, context):
+		auth = self.auth.resolve(context)
 		tracking_code = '''
 			<script type="text/javascript">
 			  var _gaq = _gaq || [];
@@ -38,14 +39,15 @@ class GoogleAnalyticsNode(template.Node):
 				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 			  })();
 			</script>
-		''' % {'auth': self.auth}
+		''' % {'auth': auth}
 		
 		return tracking_code
 
 class YandexMetricaNode(template.Node):
 	def __init__(self, auth):
-		self.auth = auth
+		self.auth = template.Variable(auth)
 	def render(self, context):
+		auth = self.auth.resolve(context)
 		tracking_code = '''
 			<!-- Yandex.Metrika -->
 			<script src="//mc.yandex.ru/metrika/watch.js" type="text/javascript"></script>
@@ -57,6 +59,6 @@ class YandexMetricaNode(template.Node):
 			</script></div>
 			<noscript><div style="position:absolute"><img src="//mc.yandex.ru/watch/%(auth)s" alt="" /></div></noscript>
 			<!-- /Yandex.Metrika -->
-		''' % {'auth': self.auth}
+		''' % {'auth': auth}
 		
 		return tracking_code

@@ -13,7 +13,7 @@ from django.conf import settings
 from juice.core.shortcodes import shortcodes
 from juice.posts.models import Post
 #from juice.comments.models import Comment
-#from juice.taxonomy.models import Term, TermRelation
+from juice.taxonomy.models import Term
 from juice.pages.models import Page
 from juice.navigation.models import Menu
 #from juice.front.debug import debug
@@ -130,6 +130,28 @@ def single(request, post_slug):
 	if p.count() == 1:
 		p = p[0]
 		p.content = shortcodes.apply(p.content, request)
+		
+		p.tags = []
+		p.categories = []
+		
+		categories = Term.all()
+		categories.filter('taxonomy =', 'category')
+		categories.filter('relations =', p.key())
+		categories = categories.fetch(1000)
+		
+		tags = Term.all()
+		tags.filter('taxonomy =', 'tag')
+		tags.filter('relations = ', p.key())
+		tags = tags.fetch(1000)
+		
+		for c in categories:
+			c.permalink=make_permalink(c)
+			p.categories.append(c)
+			
+		for t in tags:
+			t.permalink=make_permalink(t)
+			p.tags.append(t)
+		
 		return render('post.html', {'post': p})
 	else:
 		raise Http404

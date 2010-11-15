@@ -1,5 +1,9 @@
 {% extends "base.html" %}
+
 {% load humanize %}
+{% load social %}
+{% load taxonomy %}
+
 {% block title %}{{ post.title }} - {% endblock %}
 {% block content %}
 	<div class="post post-{{ post.id }}">
@@ -8,6 +12,23 @@
 
 		{# Assuming the content is valid html and surrounded by <p> tags #}
 		{{ post.content|safe }}
+
+		<span class="tagged">
+			Published by {% if post.author %}{{ post.author }}{% else %}Anonymous{% endif %} on {{ post.published|date:"d.m.Y" }}
+			{% if post.categories and post.tags %}
+				in the following categories: {% taxonomy_list post.categories %} and tagged: {% taxonomy_list post.tags %}.
+			{% else %}
+				{% if post.categories %}
+					in the following categories: {% taxonomy_list post.categories %}.
+				{% else %}
+					{% if post.tags %}
+						and tagged: {% taxonomy_list post.tags %}.
+					{% else %}
+						.
+					{% endif %}
+				{% endif %}
+			{% endif %}
+		</span>
 
 		<div class="meta">
 			<div class="share">

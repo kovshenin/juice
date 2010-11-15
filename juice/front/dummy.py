@@ -1,7 +1,10 @@
+import datetime
+
 from juice.posts.models import Post
 from juice.pages.models import Page
 from juice.chunks.models import Chunk
 from juice.navigation.models import Menu, MenuItem
+from juice.taxonomy.models import Term
 
 from juice.core.models import OptionGroup, Option
 
@@ -16,13 +19,31 @@ def dummy():
 		)
 		menu_topright.put()
 		
+		# Taxonomy
+		category = {}
+		category['development'] = Term(taxonomy='category', name='Development', slug='development')
+		category['personal'] = Term(taxonomy='category', name='Personal', slug='personal')
+		category['design'] = Term(taxonomy='category', name='Design', slug='design')
+		
+		tag = {}
+		tag['google'] = Term(taxonomy='tag', name='Google', slug='google')
+		tag['yahoo'] = Term(taxonomy='tag', name='Yahoo', slug='yahoo')
+		tag['apple'] = Term(taxonomy='tag', name='Apple', slug='apple')
+		
+		# Put all categories and tags
+		for k in category:
+			category[k].put()
+		for k in tag:
+			tag[k].put()
+		
 		# Posts
 		for i in range(1, 10):
 			p = Post(
 				title="Post Title %s" % i,
 				slug="post-title-%s" % i,
 				excerpt="Here goes a post excerpt",
-				content="<p>Lorem ipsum dolor sit amet.</p>"
+				content="<p>Lorem ipsum dolor sit amet.</p>",
+				published=datetime.datetime.today() - datetime.timedelta(days=i)
 			)
 			p.put()
 			
@@ -30,9 +51,19 @@ def dummy():
 			title='Lorem Ipsum Dolor Sit Amet',
 			slug='lorem-ipsum',
 			excerpt = 'Lipsum excerpt',
-			content = '<p>Lorem ipsum content: [youtube url="http://www.youtube.com/watch?v=Mk3qkQROb_k"] Yes</p><p>Here is a chunk: <strong>[chunk name="some-chunk"]</strong></p>'
+			content = '<p>Lorem ipsum content: [youtube url="http://www.youtube.com/watch?v=I6COwgigJ-g"] Yes</p><p>Here is a chunk: <strong>[chunk name="some-chunk"]</strong></p>'
 		)
 		p.put()
+		
+		# Let's add this post to a category and tag it
+		category['development'].relations.append(p.key())
+		category['development'].put()
+		
+		tag['yahoo'].relations.append(p.key())
+		tag['yahoo'].put()
+		
+		tag['google'].relations.append(p.key())
+		tag['google'].put()
 		
 		# Chunks
 		c = Chunk(

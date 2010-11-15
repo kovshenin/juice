@@ -11,7 +11,7 @@
 """
 
 from django import template
-from juice.taxonomy.models import Term, TermRelation
+from juice.taxonomy.models import Term
 
 register = template.Library()
 

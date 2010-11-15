@@ -55,6 +55,7 @@ class CommentForm(forms.Form):
 # Google AppEngine:
 
 from google.appengine.ext import db
+from django.db.models import signals as model_signals
 
 class Comment(db.Model):
 	name = db.StringProperty(required=True)
@@ -67,17 +68,42 @@ class Comment(db.Model):
 	
 	parent_comment = db.SelfReferenceProperty("Parent", collection_name="comment_parent_reference")
 	object_link = db.ReferenceProperty(collection_name="comment_object_link_reference")
+	
+	# Trees
+	
+	tree_id = db.IntegerProperty()
+	left = db.IntegerProperty()
+	right = db.IntegerProperty()
+	level = db.IntegerProperty()
+	
+	def put(self, *args, **kwargs):
+		c = self
+		self.level = 0
+		while not c.is_root_node():
+			self.level += 1
+			c = c.parent_comment
+
+		super(Comment, self).put(*args, **kwargs)
+	
+	def is_root_node(self):
+		return self.parent_comment is None
+	
+	def is_child_node(self):
+		return not self.is_root_node()
 
 	def populate(self):
 		import hashlib
 		self.avatar = "http://www.gravatar.com/avatar/%s" % hashlib.md5(self.email.strip().lower()).hexdigest()
 		
+		"""
 		# @todo Check if this is fast and efficient enough, probably not
 		# Should store the level value inside the database and count it
 		# upon update, create or delete
 		self.level = 0
-		c = self.parent_comment
+		c = self
 		
-		while c:
+		while not c.is_root_node():
 			self.level += 1
 			c = c.parent_comment
+
+		"""

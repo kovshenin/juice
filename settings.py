@@ -104,7 +104,7 @@ INSTALLED_APPS = (
 	#'juice.forms',
 	#'juice.analytics',
 	'juice.chunks',
-	#'juice.navigation',
+	'juice.navigation',
 	'juice.social',
 )
 

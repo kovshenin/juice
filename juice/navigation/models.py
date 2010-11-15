@@ -1,3 +1,6 @@
+"""
+# Django
+
 from mptt.models import MPTTModel
 
 from django.db import models
@@ -81,3 +84,39 @@ class MenuAPI():
 		for item in menu.items:
 			item.permalink = make_permalink(item)
 		return menu
+"""
+
+# Google AppEngine
+
+from google.appengine.ext import db
+from juice.front.permalinks import make_permalink
+
+class Menu(db.Model):
+	title = db.StringProperty()
+	slug = db.StringProperty(required=True)
+
+	published = db.DateTimeProperty('Date Published', auto_now_add=True)
+	updated = db.DateTimeProperty('Date Upated', auto_now=True, auto_now_add=True)
+
+	def populate(self):
+		self.items = MenuItem.all()
+		self.items.filter('menu =', self.key())
+		self.items.order('order')
+		self.items = self.items.fetch(1000)
+		
+		for item in self.items:
+			if item.object_link:
+				item.permalink = make_permalink(item.object_link)
+
+class MenuItem(db.Model):
+	slug = db.StringProperty()
+	caption = db.StringProperty()
+	permalink = db.StringProperty()
+	order = db.IntegerProperty()
+
+	# Menu Items can be hierarchical
+	parent_menuitem = db.SelfReferenceProperty("Parent")
+	menu = db.ReferenceProperty(Menu, collection_name="menu_reference")
+	
+	# In case we'd like to link to a dynamic object
+	object_link = db.ReferenceProperty(collection_name="object_link_reference")

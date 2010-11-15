@@ -1,12 +1,21 @@
 from juice.posts.models import Post
 from juice.pages.models import Page
 from juice.chunks.models import Chunk
+from juice.navigation.models import Menu, MenuItem
 
 from juice.core.models import OptionGroup, Option
 
 def dummy():
 	p = Post.all()
 	if p.count() == 0:
+		# Menus
+		
+		menu_topright = Menu(
+			title="Top Right Short Menu",
+			slug="topright"
+		)
+		menu_topright.put()
+		
 		# Posts
 		for i in range(1, 10):
 			p = Post(
@@ -57,6 +66,12 @@ def dummy():
 			content='<p>About me, also check out my <a href="/about/bio/">biography</a>.</p>'
 		)
 		p.put()
+		i = MenuItem(
+			caption="About",
+			menu = menu_topright.key(),
+			object_link = p.key()
+		)
+		i.put()
 		
 		b = Page(
 			title='Bio',
@@ -72,6 +87,12 @@ def dummy():
 			content='<p>Sitemap</p>'
 		)
 		p.put()
+		i = MenuItem(
+			caption="Sitemap",
+			menu = menu_topright.key(),
+			object_link = p.key()
+		)
+		i.put()
 		
 		p = Page(
 			title='Feedback',
@@ -79,6 +100,12 @@ def dummy():
 			content='<p>Feedback</p>'
 		)
 		p.put()
+		i = MenuItem(
+			caption="Feedback",
+			menu = menu_topright.key(),
+			object_link = p.key()
+		)
+		i.put()
 		
 		# Options
 		

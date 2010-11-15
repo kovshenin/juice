@@ -15,7 +15,7 @@ from juice.posts.models import Post
 #from juice.comments.models import Comment
 #from juice.taxonomy.models import Term, TermRelation
 from juice.pages.models import Page
-#from juice.navigation.models import Menu
+from juice.navigation.models import Menu
 #from juice.front.debug import debug
 
 #from juice.forms.models import FormsAPI
@@ -216,23 +216,24 @@ def render(template_name, context={}, **kwargs):
 	# with the context in the global variable. This can be used in your templates
 	# by accessing global.navigation.menuslug (no spaces, dots or dashes in the slugs).
 	navigation = {}
-	#available_menus = Menu.objects.all()
-	#for menu in available_menus:
-	#	navigation[menu.slug] = []
-	#	menu.populate() # Populates the menu permalinks from linked objects
-	#	
-	#	for item in menu.items:
-	#		navigation[menu.slug].append({
-	#			'caption': item.caption,
-	#			'permalink': item.permalink,
-	#		})
+	available_menus = Menu.all()
+	available_menus = available_menus.fetch(1000)
+	for menu in available_menus:
+		navigation[menu.slug] = []
+		menu.populate() # Populates the menu permalinks from linked objects
+		
+		for item in menu.items:
+			navigation[menu.slug].append({
+				'caption': item.caption,
+				'permalink': item.permalink,
+			})
 	
 	# Temp menu for AppEngine
-	navigation['topright'] = [
-		{'caption': 'About', 'permalink': '/about/'},
-		{'caption': 'Sitemap', 'permalink': '/sitemap/'},
-		{'caption': 'Feedback', 'permalink': '/feedback/'}
-	]
+	#navigation['topright'] = [
+	#	{'caption': 'About', 'permalink': '/about/'},
+	#	{'caption': 'Sitemap', 'permalink': '/sitemap/'},
+	#	{'caption': 'Feedback', 'permalink': '/feedback/'}
+	#]
 
 	# Form the global context here, these variables are passed to each and every template
 	# rendered via juice.front.views.render(). You can add additional variables which can

@@ -23,13 +23,14 @@ def log_exception(*args, **kwds):
    logging.exception('Exception in request:')
 
 # Log errors.
-django.dispatch.dispatcher.connect(
-    log_exception, django.core.signals.got_request_exception)
+django.core.signals.got_request_exception.connect(log_exception)
 
 # Unregister the rollback event handler.
-django.dispatch.dispatcher.disconnect(
-    django.db._rollback_on_exception,
-    django.core.signals.got_request_exception)
+django.core.signals.got_request_exception.disconnect(django.db._rollback_on_exception)
+
+# Fill with dummy data
+if django.conf.settings.DEBUG:
+	import juice.front.dummy
 
 def main():
     # Create a Django application for WSGI.

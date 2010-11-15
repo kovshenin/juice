@@ -1,5 +1,8 @@
+import os
+
 # Juice settings
 JUICE_THEME = 'kovshenin'
+ROOT_PATH = os.path.dirname(__file__)
 
 # Django settings for juice project.
 
@@ -12,12 +15,12 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'mysql'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'juice'             # Or path to database file if using sqlite3.
-DATABASE_USER = 'juice'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'juice'         # Not used with sqlite3.
-DATABASE_HOST = 'localhost'             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = '3306'             # Set to empty string for default. Not used with sqlite3.
+#DATABASE_ENGINE = 'mysql'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+#DATABASE_NAME = 'juice'             # Or path to database file if using sqlite3.
+#DATABASE_USER = 'juice'             # Not used with sqlite3.
+#DATABASE_PASSWORD = 'juice'         # Not used with sqlite3.
+#DATABASE_HOST = 'localhost'             # Set to empty string for localhost. Not used with sqlite3.
+#DATABASE_PORT = '3306'             # Set to empty string for default. Not used with sqlite3.
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -38,7 +41,7 @@ USE_I18N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = '/home/kovshenin/Juice/juice/templates/%s/static/' % JUICE_THEME
+MEDIA_ROOT = ROOT_PATH + '/templates/%s/static/' % JUICE_THEME
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -68,43 +71,41 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 MIDDLEWARE_CLASSES = (
 	'django.middleware.common.CommonMiddleware',
-	'django.contrib.sessions.middleware.SessionMiddleware',
-	'django.contrib.auth.middleware.AuthenticationMiddleware',
-	'juice.front.middleware.Tidy',
+	#'django.contrib.sessions.middleware.SessionMiddleware',
+	#'django.contrib.auth.middleware.AuthenticationMiddleware',
+	#'juice.front.middleware.Tidy',
 )
 
-ROOT_URLCONF = 'juice.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-	'/home/kovshenin/Juice/juice/templates/%s' % JUICE_THEME,
-	'/home/kovshenin/Juice/juice/pages/templates',
-	'/home/kovshenin/Juice/juice/taxonomy/templates',
+	ROOT_PATH + '/templates/%s' % JUICE_THEME,
 )
 
 INSTALLED_APPS = (
-	'django.contrib.auth',
+	#'django.contrib.auth',
 	'django.contrib.contenttypes',
-	'django.contrib.sessions',
-	'django.contrib.sites',
-	'django.contrib.admin',
+	#'django.contrib.sessions',
+	#'django.contrib.sites',
+	#'django.contrib.admin',
 	'django.contrib.humanize',
 	
-	'mptt',
+	#'mptt',
 
 	'juice.core',
 	'juice.front',
 	'juice.posts',
 	'juice.pages',
-	'juice.comments',
-	'juice.taxonomy',
-	'juice.forms',
-	'juice.analytics',
+	#'juice.comments',
+	#'juice.taxonomy',
+	#'juice.forms',
+	#'juice.analytics',
 	'juice.chunks',
-	'juice.navigation',
-	'juice.social',
+	#'juice.navigation',
+	#'juice.social',
 )
 
 LOG_FILE = '/tmp/juice.log'

@@ -1,6 +1,4 @@
 {% extends "base.html" %}
-{% load humanize %}
-{% load social %}
 {% block content %}
 	<div class="post page-{{ page.id }}">
 		<h1><a href="{{ page.permalink }}" rel="bookmark" title="Permanent Link to {{ page.title }}">{{ page.title }}</a></h1>
@@ -10,7 +8,7 @@
 
 		<div class="meta">
 			<div class="share">
-				{% social "juice-social-share" page %}
+				share
 			</div>
 
 			<p class="links">

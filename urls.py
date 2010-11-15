@@ -3,8 +3,8 @@ from django.conf import settings
 from juice.front.permalinks import get_patterns
 
 # Uncomment the next two lines to enable the admin:
-from django.contrib import admin
-admin.autodiscover()
+#from django.contrib import admin
+#admin.autodiscover()
 
 urlpatterns = patterns('',
 	# Example:
@@ -15,7 +15,7 @@ urlpatterns = patterns('',
 
 	# Uncomment the next line to enable the admin:
 	(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
-	(r'^admin/', include(admin.site.urls)),
+	#(r'^admin/', include(admin.site.urls)),
 )
 
 # get additional url patterms from juice.front

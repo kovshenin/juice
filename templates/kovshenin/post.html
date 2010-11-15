@@ -1,8 +1,5 @@
 {% extends "base.html" %}
-
 {% load humanize %}
-{% load social %}
-
 {% block content %}
 	<div class="post post-{{ post.id }}">
 		<h1><a href="{{ post.permalink }}" rel="bookmark" title="Permanent Link to {{ post.title }}">{{ post.title }}</a></h1>
@@ -13,7 +10,7 @@
 
 		<div class="meta">
 			<div class="share">
-				{% social "juice-social-share" post %}
+				share
 			</div>
 
 			<p class="links">
@@ -25,8 +22,8 @@
 	</div>
 	<div class="clear"></div>
 	
-	{% with post as obj %}
-	{% include "comments_template.html" %}
-	{% endwith %}
+	{# with post as obj #}
+	{# include "comments_template.html" #}
+	{# endwith #}
 
 {% endblock %}

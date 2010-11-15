@@ -1,13 +1,11 @@
 {% load chunks %}
-{% load social %}
-{% load taxonomy %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
 			<head profile="http://gmpg.org/xfn/11">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>{% block title %}{% endblock %}{% chunk "title" %}</title>
+	<title>{% block title %}{% endblock %}title</title>
 	<meta http-equiv="author" content="Konstantin Kovshenin" />
-	<link rel="index" title="{% chunk 'title' %}" href="{{ global.home }}" />
+	<link rel="index" title="title" href="{{ global.home }}" />
 	<meta name="generator" content="Juice 0.1" />
 	<link rel="stylesheet" href="/static/css/reset.css" type="text/css" media="screen" />
 	<link rel="stylesheet" href="/static/css/960.css" type="text/css" media="screen" />
@@ -103,15 +101,15 @@
 			<div class="grid_3 sidebar">
 				{% block sidebar %}
 				<div class="social">
-					{% social "juice-social-profiles" %}
+					social
 					<div class="tag-cloud">
 						<!-- Tag cloud goes here -->
-						{% taxonomy_cloud global.tags %}
+						cloud
 					</div>
 				</div>
 
 				<div class="bio">
-					{% chunk "short-bio" %}
+					bio
 				</div>
 
 				<div class="more">

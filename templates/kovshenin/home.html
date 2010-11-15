@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load humanize %}
-{% load social %}
 {% block content %}
 	{% for post in posts %}
 		<div class="post post-{{ post.id }}">
@@ -12,7 +11,7 @@
 
 			<div class="meta">
 				<div class="share">
-					{% social "juice-social-share" post %}
+					share
 				</div>
 
 				<p class="links">

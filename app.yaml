@@ -9,3 +9,6 @@ handlers:
 
 - url: /.*
   script: main.py
+
+builtins:
+- datastore_admin: on

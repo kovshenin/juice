@@ -105,7 +105,7 @@ INSTALLED_APPS = (
 	#'juice.analytics',
 	'juice.chunks',
 	#'juice.navigation',
-	#'juice.social',
+	'juice.social',
 )
 
 LOG_FILE = '/tmp/juice.log'

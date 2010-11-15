@@ -1,19 +1,7 @@
-"""
-	Usage: 
-		1. {% taxonomy_list terms %}
-		2. {% taxonomy_cloud terms %}
-		
-		Where "terms" is a list of juice.taxonomy.models.Term
-		
-	Outputs:
-		1. A list of comma-separated terms with links to them
-		2. A cloud of terms (useful for tag clouds)
-"""
-
 from django import template
 
 from juice.core.models import OptionsAPI
-from juice.front.debug import debug
+from juice.core.debug import debug
 
 register = template.Library()
 
@@ -47,7 +35,7 @@ class SocialNodeObject(template.Node):
 		cx = template.Context(context)
 			
 		# Get the social options
-		options = OptionsAPI.by_slug(option_name)
+		options = OptionsAPI.by_slug(option_name.__str__())
 		widgets = []
 		for option in options:
 			tp = template.Template(option.value.strip())
@@ -61,7 +49,7 @@ class SocialNodePlain(template.Node):
 	def render(self, context):
 		option_name = self.option_name.resolve(context)
 		
-		options = OptionsAPI.by_slug(option_name)
+		options = OptionsAPI.by_slug(option_name.__str__())
 		widgets = []
 		for option in options:
 			widgets.append(option.value.strip())

@@ -99,7 +99,7 @@ INSTALLED_APPS = (
 	'juice.front',
 	'juice.posts',
 	'juice.pages',
-	#'juice.comments',
+	'juice.comments',
 	'juice.taxonomy',
 	#'juice.forms',
 	'juice.analytics',

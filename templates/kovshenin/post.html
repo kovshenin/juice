@@ -44,8 +44,8 @@
 	</div>
 	<div class="clear"></div>
 	
-	{# with post as obj #}
-	{# include "comments_template.html" #}
-	{# endwith #}
+	{% with post as obj %}
+	{% include "comments_template.html" %}
+	{% endwith %}
 
 {% endblock %}

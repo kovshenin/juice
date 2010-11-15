@@ -1,4 +1,7 @@
 # Comments Module
+"""
+# Django
+
 from mptt.models import MPTTModel
 
 from django.db import models
@@ -46,3 +49,35 @@ class CommentForm(forms.Form):
 	twitter = forms.CharField(max_length=100)
 	content = forms.CharField(required=True, widget=forms.Textarea)
 	parent = forms.CharField(required=False, max_length=100)
+
+"""
+
+# Google AppEngine:
+
+from google.appengine.ext import db
+
+class Comment(db.Model):
+	name = db.StringProperty(required=True)
+	email = db.StringProperty(required=True)
+	url = db.StringProperty()
+	content = db.StringProperty(multiline=True)
+	
+	published = db.DateTimeProperty("Published", auto_now_add=True)
+	updated = db.DateTimeProperty("Updated", auto_now_add=True, auto_now=True)
+	
+	parent_comment = db.SelfReferenceProperty("Parent", collection_name="comment_parent_reference")
+	object_link = db.ReferenceProperty(collection_name="comment_object_link_reference")
+
+	def populate(self):
+		import hashlib
+		self.avatar = "http://www.gravatar.com/avatar/%s" % hashlib.md5(self.email.strip().lower()).hexdigest()
+		
+		# @todo Check if this is fast and efficient enough, probably not
+		# Should store the level value inside the database and count it
+		# upon update, create or delete
+		self.level = 0
+		c = self.parent_comment
+		
+		while c:
+			self.level += 1
+			c = c.parent_comment

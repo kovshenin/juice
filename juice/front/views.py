@@ -12,7 +12,7 @@ from django.conf import settings
 
 from juice.core.shortcodes import shortcodes
 from juice.posts.models import Post
-#from juice.comments.models import Comment
+from juice.comments.models import Comment
 from juice.taxonomy.models import Term
 from juice.pages.models import Page
 from juice.navigation.models import Menu
@@ -45,40 +45,14 @@ def index(request, page=1):
 		post.permalink_abs = make_permalink(post, absolute=True, request=request)
 		#post.comments_count = Comment.objects.filter(content_type__pk=posts_ctype.id, object_id=post.id).count()
 		post.content = shortcodes.apply(post.content, request)
+		
+		comments = Comment.all()
+		comments.filter('object_link =', post)
+		post.comments_count = comments.count()
+		post.comments = comments.fetch(1000)
 
 	return render('home.html', {'posts': posts, 'paginator': p})
 	
-def search(request):
-	query = request.GET.get('q')
-	page = request.GET.get('page') or 1
-	
-	from django.db.models import Q
-	import operator
-	
-	words = query.split(' ')
-	qs = []
-	
-	for word in words:
-		qs.append(Q(title__icontains=word))
-		qs.append(Q(content__icontains=word))
-	
-	posts = Post.objects.filter(reduce(operator.or_, qs))
-	paginator = Paginator(posts, 5)
-	
-	try:
-		p = paginator.page(page)
-	except (EmptyPage, InvalidPage):
-		p = paginator.page(paginator.num_pages)
-		
-	results = p.object_list
-	
-	for result in results:
-		result.permalink = make_permalink(result, absolute=True, request=request)
-	
-	meta = {'query': query}
-	
-	return render('search.html', {'results': results, 'meta': meta, 'paginator': p}, context_instance=RequestContext(request))
-
 # single post view
 def single(request, post_slug):
 	#p = Post.objects.get(slug=post_slug, published__lte=datetime.now())
@@ -128,33 +102,75 @@ def single(request, post_slug):
 	p.get()
 	
 	if p.count() == 1:
-		p = p[0]
-		p.content = shortcodes.apply(p.content, request)
+		post = p[0]
+		post.content = shortcodes.apply(post.content, request)
 		
-		p.tags = []
-		p.categories = []
+		# Taxonomy
+		post.tags = []
+		post.categories = []
 		
 		categories = Term.all()
 		categories.filter('taxonomy =', 'category')
-		categories.filter('relations =', p.key())
+		categories.filter('relations =', post.key())
 		categories = categories.fetch(1000)
 		
 		tags = Term.all()
 		tags.filter('taxonomy =', 'tag')
-		tags.filter('relations = ', p.key())
+		tags.filter('relations = ', post.key())
 		tags = tags.fetch(1000)
 		
 		for c in categories:
 			c.permalink=make_permalink(c)
-			p.categories.append(c)
+			post.categories.append(c)
 			
 		for t in tags:
 			t.permalink=make_permalink(t)
-			p.tags.append(t)
+			post.tags.append(t)
 		
-		return render('post.html', {'post': p})
+		# Comments
+		comments = Comment.all()
+		comments.filter('object_link =', post)
+		post.comments_count = comments.count()
+		post.comments = comments.fetch(1000)
+		
+		for comment in post.comments:
+			comment.permalink = make_permalink(c)
+			comment.populate()
+		
+		return render('post.html', {'post': post})
 	else:
 		raise Http404
+
+def search(request):
+	query = request.GET.get('q')
+	page = request.GET.get('page') or 1
+	
+	from django.db.models import Q
+	import operator
+	
+	words = query.split(' ')
+	qs = []
+	
+	for word in words:
+		qs.append(Q(title__icontains=word))
+		qs.append(Q(content__icontains=word))
+	
+	posts = Post.objects.filter(reduce(operator.or_, qs))
+	paginator = Paginator(posts, 5)
+	
+	try:
+		p = paginator.page(page)
+	except (EmptyPage, InvalidPage):
+		p = paginator.page(paginator.num_pages)
+		
+	results = p.object_list
+	
+	for result in results:
+		result.permalink = make_permalink(result, absolute=True, request=request)
+	
+	meta = {'query': query}
+	
+	return render('search.html', {'results': results, 'meta': meta, 'paginator': p}, context_instance=RequestContext(request))
 
 """
 # view posts by category

@@ -5,6 +5,7 @@ from juice.pages.models import Page
 from juice.chunks.models import Chunk
 from juice.navigation.models import Menu, MenuItem
 from juice.taxonomy.models import Term
+from juice.comments.models import Comment
 
 from juice.core.models import OptionGroup, Option
 
@@ -64,6 +65,27 @@ def dummy():
 		
 		tag['google'].relations.append(p.key())
 		tag['google'].put()
+		
+		# Let's add a few comments
+		comment = Comment(
+			name='Konstantin',
+			email='kovshenin@live.com',
+			url='http://kovshenin.com',
+			content='Hey, this is quite an interesting post, thank you sir!',
+			object_link=p.key()
+		)
+		comment.put()
+		
+		c = Comment(
+			name='Konstantin',
+			email='konstantin@frumatic.com',
+			url='http://frumatic.com',
+			content='This is a reply to a previous comment',
+			parent_comment=comment.key(),
+			object_link=p.key()
+		)
+		c.put()
+		
 		
 		# Chunks
 		c = Chunk(

@@ -1,5 +1,4 @@
 {% load humanize %}
-{% load mptt_tags %}
 
 {# Load some additional javascript #}
 {% block scripts %}
@@ -28,11 +27,8 @@
 	{% if obj.comments %}
 	<ol class="commentlist">
 		{# Threaded comments #}
-		{% for comment,structure in obj.comments|tree_info %}
-			{# The reason we're having these nested statements is that parent nodes are children of ol nodes (written above) and #}
-			{# children (replies to comments) are nested inside ul nodes (declared inside the loop) #}
-			{% if structure.new_level and comment.level %}<ul class="children"><li>{% else %}{% if comment.level > 0 %}</li>{% endif %}<li>{% endif %}
-			
+		{% for comment in obj.comments %}
+			<li class="comment-level-{{ comment.level }}">			
 				<div id="div-comment-{{ comment.id }}" class="comment-body">
 					<div class="comment-author vcard">
 						<a href="#"><img alt="" src="{{ comment.avatar }}?s=32" class="avatar avatar-32 photo" height="32" width="32" /></a>
@@ -45,8 +41,7 @@
 						<a rel="nofollow" class="comment-reply-link" href="#respond" onclick='return moveForm("div-comment-{{ comment.id }}", "{{ comment.id }}")'>Reply</a>
 					</div>
 				</div>
-
-			{% for level in structure.closed_levels %}</li>{% if level > 0 %}</ul>{% endif %}{% endfor %}
+			</li>
 		{% endfor %}
 	</ol>
 	{% endif %}

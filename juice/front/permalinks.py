@@ -20,8 +20,8 @@ def get_patterns():
 	)
 
 from juice.posts.models import Post
-#from juice.comments.models import Comment
-#from juice.taxonomy.models import Term
+from juice.comments.models import Comment
+from juice.taxonomy.models import Term
 from juice.pages.models import Page
 
 def make_permalink(object=None, prepend="", append="", absolute=False, request=False):
@@ -48,7 +48,7 @@ def make_permalink(object=None, prepend="", append="", absolute=False, request=F
 		slug = object.slug
 		path = 'juice.front.views.single'
 		kwargs = {'post_slug': slug}
-	
+		
 	"""
 	elif isinstance(object, Term):
 		slug = object.slug

@@ -44,6 +44,12 @@ def dummy():
 		)
 		c.put()
 		
+		c = Chunk(
+			name='short-bio',
+			content='<a href="/about/"><img alt="Konstantin Kovshenin" src="/static/images/me.jpg" /></a><p>Hi! I\'m Konstantin, a web developer from Moscow, Russia. CTO at <a href="http://frumatic.com">Frumatic</a><br /><a href="/about/">More</a> &raquo;</p>'
+		)
+		c.put()
+		
 		# Pages
 		p = Page(
 			title='About',

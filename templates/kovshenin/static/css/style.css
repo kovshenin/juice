@@ -372,6 +372,14 @@ ol.commentlist li, ul.children li {
 	overflow:hidden;
 }
 
+#footer a {
+	color: #555;
+}
+
+#footer a:hover {
+	text-decoration: none;
+}
+
 /* WordPress Classes */
 .aligncenter {
 	margin: 0 auto;

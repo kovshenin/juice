@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
 			<head profile="http://gmpg.org/xfn/11">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>{% block title %}{% endblock %}title</title>
+	<title>{% block title %}{% endblock %}{% chunk "title" %}</title>
 	<meta http-equiv="author" content="Konstantin Kovshenin" />
 	<link rel="index" title="title" href="{{ global.home }}" />
 	<meta name="generator" content="Juice 0.1" />
@@ -110,7 +110,7 @@
 				</div>
 
 				<div class="bio">
-					bio
+					{% chunk "short-bio" %}
 				</div>
 
 				<div class="more">
@@ -147,14 +147,14 @@
 	<div id="footer">
 		<div class="container_12">
 			<div class="grid_9 alpha">
-				<p>Keep track via feed: <a href="http://kovshenin.com/feed/">entries</a> or <a href="http://kovshenin.com/comments/feed/">comments</a>. Questions? Suggestions? <a href="http://kovshenin.com/feedback/">Feedback</a>!<br />
-
-				Oh and I totally forgot to mention that I love <a href="http://wordpress.org/">WordPress</a> and currently running 3.0.</p>
+				<img style="float: left" src="http://code.google.com/appengine/images/appengine-noborder-120x30.gif" alt="Powered by Google App Engine" />
+				<p style="margin-left: 10px; float: left; font-size: 0.8em; width: 550px;">
+					We're proudly powered by <a href="#">Google AppEngine</a>, <a href="#">Django</a> and the legendary <a href="#">Juice Toolkit</a>. If you have any comments or suggestions, browse the <a href="">Feedback</a> section. If you're willing to contribute, hit me on <a href="http://twitter.com/kovshenin">Twitter</a>.
+				</p>
 			</div>
 			<div class="grid_3 omega">
-				<p>&copy; 2008-2010<br />
+				<p style="font-size: 0.8em;">&copy; 2008-2010<br />
 				kovshenin.com</p>
-
 			</div>
 		</div>
 	</div>

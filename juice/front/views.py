@@ -166,6 +166,7 @@ def page(request, page_slug, page=False):
 
 	page.content = shortcodes.apply(page.content, request)
 	page.permalink = make_permalink(page)
+	page.permalink_abs = make_permalink(page, absolute=True, request=request)
 	
 	return render('page.html', {'page': page})
 

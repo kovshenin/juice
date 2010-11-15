@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load social %}
+{% block title %}{{ page.title }} - {% endblock %}
 {% block content %}
 	<div class="post page-{{ page.id }}">
 		<h1><a href="{{ page.permalink }}" rel="bookmark" title="Permanent Link to {{ page.title }}">{{ page.title }}</a></h1>
@@ -8,7 +10,7 @@
 
 		<div class="meta">
 			<div class="share">
-				share
+				{% social "juice-social-share" page %}
 			</div>
 
 			<p class="links">

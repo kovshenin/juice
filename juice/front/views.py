@@ -49,7 +49,7 @@ def index(request, page=1):
 		comments = Comment.all()
 		comments.filter('object_link =', post)
 		post.comments_count = comments.count()
-		post.comments = comments.fetch(1000)
+		#post.comments = comments.fetch(1000)
 
 	return render('home.html', {'posts': posts, 'paginator': p})
 	
@@ -130,11 +130,12 @@ def single(request, post_slug):
 		# Comments
 		comments = Comment.all()
 		comments.filter('object_link =', post)
+		comments.order('left')
 		post.comments_count = comments.count()
 		post.comments = comments.fetch(1000)
 		
 		for comment in post.comments:
-			comment.permalink = make_permalink(c)
+			comment.permalink = make_permalink(comment)
 			comment.populate()
 		
 		return render('post.html', {'post': post})
@@ -287,6 +288,35 @@ def render(template_name, context={}, **kwargs):
 	# is mandatory for Juice templates to work correctly. If you're looking to change URL styles
 	# to access dynamic and static data, use the permalinks.py file and urls.py respectively.
 	return render_to_response(template_name, context, **kwargs)
+	
+def work(request):
+	from google.appengine.api.labs import taskqueue
+	
+	taskqueue.add(url='/worker/', method='GET', params={'key': 'add_posts'})
+	taskqueue.add(url='/worker/', method='GET', params={'key': 'add_pages'})
+	taskqueue.add(url='/worker/', method='GET', params={'key': 'add_options'})
+	taskqueue.add(url='/worker/', method='GET', params={'key': 'add_chunks'})
+	
+	for i in range(0, 80):
+		taskqueue.add(url='/worker/', method='GET', params={'key': 'add_comments'})
+	
+	return HttpResponse("Dummy added to task queue")
+	
+def worker(request):
+	from google.appengine.ext import db
+	
+	get_key = request.GET.get('key') or None
+	key = request.POST.get('key') or get_key
+	if key:
+	
+		def txn():
+			from juice.front.dummy import dummy
+			dummy.request(func=key)
+
+		txn()
+		#db.run_in_transaction(txn)
+		
+	return HttpResponse("Worker has been fired, transaction complete.")
 
 """
 # Comment form action

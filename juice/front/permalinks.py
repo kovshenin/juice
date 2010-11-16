@@ -10,7 +10,9 @@ def get_patterns():
 		#(r'^category/(?P<category_slug>[-\w/]+)/$', 'category'),
 		#(r'^tag/(?P<tag_slug>[-\w]+)/$', 'tag'),
 		
-		(r'^search/$', 'search'),		
+		(r'^search/$', 'search'),
+		(r'^work/$', 'work'),
+		(r'^worker/$', 'worker'),
 		
 		(r'^(?P<slug>[-\w\/]+)/$', 'route'),
 

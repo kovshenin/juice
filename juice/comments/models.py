@@ -56,12 +56,13 @@ class CommentForm(forms.Form):
 
 from google.appengine.ext import db
 from django.db.models import signals as model_signals
+from juice.core.debug import debug
 
 class Comment(db.Model):
 	name = db.StringProperty(required=True)
 	email = db.StringProperty(required=True)
 	url = db.StringProperty()
-	content = db.StringProperty(multiline=True)
+	content = db.TextProperty()
 	
 	published = db.DateTimeProperty("Published", auto_now_add=True)
 	updated = db.DateTimeProperty("Updated", auto_now_add=True, auto_now=True)
@@ -77,14 +78,53 @@ class Comment(db.Model):
 	level = db.IntegerProperty()
 	
 	def put(self, *args, **kwargs):
-		c = self
-		self.level = 0
-		while not c.is_root_node():
-			self.level += 1
-			c = c.parent_comment
+		
+		if not self.is_saved():
+			self.level = 0
+			c = self
+			while not c.is_root_node():
+				self.level += 1
+				c = c.parent_comment
 
+			if self.is_root_node():
+				q = Comment.all()
+				q.filter('object_link =', self.object_link)
+				q.order('-right')
+				q.fetch(1)
+				
+				if q.count() > 0:
+					self.left = q[0].right + 1
+					self.right = q[0].right + 2
+				else:
+					self.left = 1
+					self.right = 2
+				
+			else:
+				# My left should be parent's right
+				right = self.parent_comment.right
+				self.left = right
+				self.right = self.left + 1
+				
+				# Where right > myright
+				q = Comment.all()
+				q.filter('object_link =', self.object_link)
+				q.filter('right >=', right)
+				q.fetch(1000)
+				for c in q:
+					c.right += 2
+					c.put()
+					
+				# Where left > right
+				q = Comment.all()
+				q.filter('object_link =', self.object_link)
+				q.filter('left >=', right)
+				q.fetch(1000)
+				for c in q:
+					c.left += 2
+					c.put()
+					
 		super(Comment, self).put(*args, **kwargs)
-	
+
 	def is_root_node(self):
 		return self.parent_comment is None
 	

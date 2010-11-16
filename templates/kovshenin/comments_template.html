@@ -23,7 +23,7 @@
 
 {# Comments Template #}
 <div class="comments-template">
-	<h3 id="comments">{{ obj.comments.count }} response{{ obj.comments.count|pluralize }} to &laquo;{{ obj.title }}&raquo;</h3>
+	<h3 id="comments">{{ obj.comments_count }} response{{ obj.comments_count|pluralize }} to &laquo;{{ obj.title }}&raquo;</h3>
 	{% if obj.comments %}
 	<ol class="commentlist">
 		{# Threaded comments #}
@@ -31,8 +31,8 @@
 			<li class="comment-level-{{ comment.level }}">			
 				<div id="div-comment-{{ comment.id }}" class="comment-body">
 					<div class="comment-author vcard">
-						<a href="#"><img alt="" src="{{ comment.avatar }}?s=32" class="avatar avatar-32 photo" height="32" width="32" /></a>
-						<cite class="fn"><a href="#" rel="external nofollow" class="url">{{ comment.name }}</a></cite>
+						<a href="#"><img alt="" src="{{ comment.avatar }}?s=32&amp;d=identicon" class="avatar avatar-32 photo" height="32" width="32" /></a>
+						<cite class="fn">{{ comment.left }} <a href="#" rel="external nofollow" class="url">{{ comment.name }}</a> {{ comment.right }}</cite>
 					</div>
 					<div class="comment-meta commentmetadata">{{ comment.published }}</div>
 					<p>{{ comment.content }}</p>

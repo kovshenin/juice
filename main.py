@@ -30,8 +30,8 @@ django.core.signals.got_request_exception.connect(log_exception)
 django.core.signals.got_request_exception.disconnect(django.db._rollback_on_exception)
 
 # Fill with dummy data
-if django.conf.settings.DEBUG:
-	import juice.front.dummy
+#if django.conf.settings.DEBUG:
+#	import juice.front.dummy
 
 def main():
     # Create a Django application for WSGI.

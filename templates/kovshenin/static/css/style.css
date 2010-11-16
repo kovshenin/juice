@@ -339,6 +339,11 @@ ol.commentlist li, ul.children li {
 .comment-level-3 { margin-left: 144px; }
 .comment-level-4 { margin-left: 192px; }
 .comment-level-5 { margin-left: 240px; }
+.comment-level-6 { margin-left: 288px; }
+.comment-level-7 { margin-left: 336px; }
+.comment-level-8 { margin-left: 384px; }
+.comment-level-9 { margin-left: 432px; }
+.comment-level-10 { margin-left: 480px; }
 
 .commentlist .avatar {
 	float: left;

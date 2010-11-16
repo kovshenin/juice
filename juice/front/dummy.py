@@ -108,7 +108,7 @@ def dummy():
 		
 		c = Chunk(
 			name='slogan',
-			content='Why reinvent the web?'
+			content='The Power of Python, The Scalability of AppEngine'
 		)
 		c.put()
 		

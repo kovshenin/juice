@@ -58,10 +58,14 @@ class OptionsAPI():
 	def by_slug(group_slug):
 		group = OptionGroup.all()
 		group.filter('slug =', group_slug)
-		group = group.get()
+		group = group.get() or None
 		
-		options = Option.all()
-		options.filter('group =', group.key())
-		options = options.fetch(1000)
+		if group:
+			options = Option.all()
+			options.filter('group =', group.key())
+			options = options.fetch(1000)
 		
-		return options
+			return options
+		
+		else:
+			return []

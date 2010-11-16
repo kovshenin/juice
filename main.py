@@ -32,13 +32,34 @@ django.core.signals.got_request_exception.disconnect(django.db._rollback_on_exce
 # Fill with dummy data
 #if django.conf.settings.DEBUG:
 #	import juice.front.dummy
-
-def main():
+def real_main():
     # Create a Django application for WSGI.
     application = django.core.handlers.wsgi.WSGIHandler()
 
     # Run the WSGI CGI handler with that application.
     util.run_wsgi_app(application)
+    
+def profile_main():
+	# This is the main function for profiling
+	# We've renamed our original main() above to real_main()
+	import cProfile, pstats
+	from google.appengine.api import memcache
+
+	prof = cProfile.Profile()
+	prof = prof.runctx("real_main()", globals(), locals())
+	print "<!-- Profiling"
+	stats = pstats.Stats(prof)
+	stats.sort_stats("time")  # Or cumulative
+	stats.print_stats(80)  # 80 = how many to print
+	
+	mc = memcache.get_stats()
+	print "Memcache hits: %s, misses: %s" % (mc['hits'], mc['misses'])
+	# The rest is optional.
+	# stats.print_callees()
+	# stats.print_callers()
+	print "-->"
+
+main = profile_main
 
 if __name__ == '__main__':
     main()

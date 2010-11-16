@@ -1,3 +1,5 @@
+from google.appengine.api import memcache
+
 from datetime import datetime
 import os.path
 
@@ -16,28 +18,13 @@ from juice.comments.models import Comment
 from juice.taxonomy.models import Term
 from juice.pages.models import Page
 from juice.navigation.models import Menu
-#from juice.front.debug import debug
 
 #from juice.forms.models import FormsAPI
 from juice.front.permalinks import make_permalink
 
 # homepage
 def index(request, page=1):
-	posts_list = Post.all()
-	posts_list.order('-published')
-	#posts_list.filter(published__lte=datetime.now()).order_by('-published')
-	paginator = Paginator(posts_list, 5)
-	
-	try:
-		p = paginator.page(page)
-	except (EmptyPage, InvalidPage):
-		p = paginator.page(paginator.num_pages)
-		
-	posts = p.object_list
-
-	p.next_link = reverse('juice.front.views.index', kwargs={'page': p.next_page_number()})
-	p.previous_link = reverse('juice.front.views.index', kwargs={'page': p.previous_page_number()})
-	
+	posts, p = get_posts(page)
 	#posts_ctype = ContentType.objects.get_for_model(Post)
 
 	for post in posts:
@@ -45,10 +32,6 @@ def index(request, page=1):
 		post.permalink_abs = make_permalink(post, absolute=True, request=request)
 		#post.comments_count = Comment.objects.filter(content_type__pk=posts_ctype.id, object_id=post.id).count()
 		post.content = shortcodes.apply(post.content, request)
-		
-		comments = Comment.all()
-		comments.filter('object_link =', post)
-		post.comments_count = comments.count()
 		#post.comments = comments.fetch(1000)
 
 	return render('home.html', {'posts': posts, 'paginator': p})
@@ -97,12 +80,9 @@ def single(request, post_slug):
 	#	if action == "redirect_to":
 	#		return HttpResponseRedirect(arg)
 	
-	p = Post.all()
-	p.filter('slug =', post_slug)
-	p.get()
+	post = get_post(post_slug)
 	
-	if p.count() == 1:
-		post = p[0]
+	if post:
 		post.content = shortcodes.apply(post.content, request)
 		
 		# Taxonomy
@@ -128,11 +108,7 @@ def single(request, post_slug):
 			post.tags.append(t)
 		
 		# Comments
-		comments = Comment.all()
-		comments.filter('object_link =', post)
-		comments.order('left')
-		post.comments_count = comments.count()
-		post.comments = comments.fetch(1000)
+		post.comments, post.comments_count = get_comments(post)
 		
 		for comment in post.comments:
 			comment.permalink = make_permalink(comment)
@@ -141,6 +117,70 @@ def single(request, post_slug):
 		return render('post.html', {'post': post})
 	else:
 		raise Http404
+		
+# Cache is below
+def get_comments(obj):
+	data = memcache.get('comments-%s' % obj.key())
+	if data is not None:
+		return data
+	else:
+		comments = Comment.all()
+		comments.filter('object_link =', obj)
+		comments.order('left')
+		
+		comments_count = comments.count()
+		comments = comments.fetch(1000)
+		
+		data = (comments, comments_count)
+
+		memcache.add("comment-%s" % obj.key(), data, 60)		
+		return data
+		
+def get_post(post_slug):
+	data = memcache.get('post-%s' % post_slug)
+	if data is not None:
+		return data
+	else:
+		posts = Post.all()
+		posts.filter('slug =', post_slug)
+		posts.get()
+		
+		if posts:
+			data = posts[0]
+			memcache.add('posts-%s' % post_slug, data, 60)
+			return data
+		else:
+			return None
+			
+def get_posts(page=1):
+	data = memcache.get('posts-page-%s' % page)
+	if data is not None:
+		return data
+	else:
+		posts_list = Post.all()
+		posts_list.order('-published')
+		#posts_list.filter(published__lte=datetime.now()).order_by('-published')
+		paginator = Paginator(posts_list, 5)
+		
+		try:
+			p = paginator.page(page)
+		except (EmptyPage, InvalidPage):
+			p = paginator.page(paginator.num_pages)
+			
+		posts = p.object_list
+
+		p.next_link = reverse('juice.front.views.index', kwargs={'page': p.next_page_number()})
+		p.previous_link = reverse('juice.front.views.index', kwargs={'page': p.previous_page_number()})
+		
+		for post in posts:
+			comments = Comment.all()
+			comments.filter('object_link =', post)
+			post.comments_count = comments.count()
+		
+		data = posts, p
+		memcache.add('posts-page-%s' % page, data, 60)
+		return data
+
 
 def search(request):
 	query = request.GET.get('q')

@@ -41,4 +41,4 @@ def main():
     util.run_wsgi_app(application)
 
 if __name__ == '__main__':
-    real_main()
+    main()

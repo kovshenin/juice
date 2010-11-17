@@ -1,4 +1,4 @@
 from juice.comments.models import Comment
-from django.contrib import admin
+from juice.admin.utils import admin
 
-admin.site.register(Comment)
+admin.register(Comment)

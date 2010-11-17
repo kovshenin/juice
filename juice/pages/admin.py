@@ -1,5 +1,5 @@
 # Pages Admin
 from juice.pages.models import Page
-from django.contrib import admin
+from juice.admin.utils import admin
 
-admin.site.register(Page)
+admin.register(Page)

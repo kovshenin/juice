@@ -1,0 +1,13 @@
+<ul>
+{% for item in global.navigation.main %}
+	<li><a href="{{ item.url }}">{{ item.caption }}</a>
+{% endfor %}
+</ul>
+
+listing:<br />
+
+<ul>
+{% for object in objects %}
+	<li>{{ object }}</li>
+{% endfor %}
+</ul>

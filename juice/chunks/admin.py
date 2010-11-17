@@ -1,4 +1,4 @@
 from juice.chunks.models import Chunk
-from django.contrib import admin
+from juice.admin.utils import admin
 
-admin.site.register(Chunk)
+admin.register(Chunk)

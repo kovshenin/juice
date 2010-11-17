@@ -7,6 +7,10 @@ handlers:
 - url: /static
   static_dir: templates/kovshenin/static
 
+- url: /admin/.*
+  script: main.py
+  login: admin
+
 - url: /.*
   script: main.py
 

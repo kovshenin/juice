@@ -83,6 +83,7 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 	ROOT_PATH + '/templates/%s' % JUICE_THEME,
+	ROOT_PATH + '/templates/admin',
 )
 
 INSTALLED_APPS = (
@@ -96,6 +97,7 @@ INSTALLED_APPS = (
 	#'mptt',
 
 	'juice.core',
+	'juice.admin',
 	'juice.front',
 	'juice.posts',
 	'juice.pages',

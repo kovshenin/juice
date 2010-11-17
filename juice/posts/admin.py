@@ -1,6 +1,6 @@
 # Posts Admin
 
 from juice.posts.models import Post
-from django.contrib import admin
+from juice.admin.utils import admin
 
-admin.site.register(Post)
+admin.register(Post)

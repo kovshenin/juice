@@ -53,7 +53,7 @@ def profile_main():
 	stats.print_stats(80)  # 80 = how many to print
 	
 	mc = memcache.get_stats()
-	print "Memcache hits: %s, misses: %s" % (mc['hits'], mc['misses'])
+	print "Memcache hits: %s, misses: %s, size: %s kb" % (mc['hits'], mc['misses'], round(mc['bytes']/1024.0,2))
 	# The rest is optional.
 	# stats.print_callees()
 	# stats.print_callers()

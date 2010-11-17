@@ -133,7 +133,7 @@ def get_comments(obj):
 		
 		data = (comments, comments_count)
 
-		memcache.add("comment-%s" % obj.key(), data, 60)		
+		memcache.add("comments-%s" % obj.key(), data, 60)		
 		return data
 		
 def get_post(post_slug):
@@ -147,7 +147,7 @@ def get_post(post_slug):
 		
 		if posts:
 			data = posts[0]
-			memcache.add('posts-%s' % post_slug, data, 60)
+			memcache.add('post-%s' % post_slug, data, 60)
 			return data
 		else:
 			return None

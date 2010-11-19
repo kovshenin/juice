@@ -1,0 +1,15 @@
+<ul>
+{% for item in global.navigation.main %}
+	<li><a href="{{ item.url }}">{{ item.caption }}</a>
+{% endfor %}
+</ul>
+
+<p>Editing: {{ object }}</p>
+
+<form>
+	{% for field in object.editable_fields %}
+	<label>{{ field.caption|title }}: </label><input type="text" value="{{ field.current_value }}" /><br />
+	{% endfor %}
+</form>
+
+{{ debug }}

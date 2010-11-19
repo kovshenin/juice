@@ -6,8 +6,33 @@
 
 listing:<br />
 
-<ul>
-{% for object in objects %}
-	<li>{{ object }}</li>
-{% endfor %}
-</ul>
+<style>
+	.data td {
+		border-top: dotted 1px #ccc;
+	}
+</style>
+
+<table class="data">
+	<tr>
+		<th><input type="checkbox" /></th>
+	{% for field in options.fields %}
+		<th>{{ field|title }}</th>
+	{% endfor %}
+	</tr>
+
+	{% for object in objects %}
+	<tr>
+			<td><input type="checkbox" /></td>
+		{% for field in object.admin_fields %}
+			<td><a href="{{ field.url }}">{{ field.caption }}</a></td>
+		{% endfor %}
+	</tr>
+	{% endfor %}
+	
+	<tr>
+		<th><input type="checkbox" /></th>
+	{% for field in options.fields %}
+		<th>{{ field|title }}</th>
+	{% endfor %}
+	</tr>
+</table>

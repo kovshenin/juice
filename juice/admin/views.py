@@ -10,20 +10,47 @@ def dashboard(request):
 	
 def list(request, object_slug):
 	object_class = None
+	
 	for item in admin.registered_items:
-		if slugify(item.__name__) == object_slug:
-			object_class = item
+		if slugify(item) == object_slug:
+			object_class = admin.registered_items[item][0]
+			object_options = admin.registered_items[item][1]
+			object_slug = slugify(item)
 			
 	objects = object_class.all()
-	objects = objects.fetch(1000)
+	objects = objects.fetch(10)
+	
+	for object in objects:
+		object.admin_fields = []
+		for field in object_options['fields']:
+			object.admin_fields.append({'caption': getattr(object, field), 'url': reverse('juice.admin.views.edit', args=[], kwargs={'object_slug': object_slug, 'object_id': object.key()})})
+
+	return render('list.html', {'objects': objects, 'options': object_options})
+	
+def edit(request, object_slug, object_id):
+	object_class = None
+	
+	for item in admin.registered_items:
+		if slugify(item) == object_slug:
+			object_class = admin.registered_items[item][0]
+			object_options = admin.registered_items[item][1]
+			object_slug = slugify(item)
 			
-	return render('list.html', {'objects': objects})
+	object = object_class.get(str(object_id))
+	object.editable_fields = []
+	
+	for field in object_options['editable_fields']:
+		object.editable_fields.append({'caption': field, 'current_value': getattr(object, field)})
+	
+	debug = {'id': str(object_id)}
+	
+	return render('edit.html', {'object': object, 'options': object_options, 'debug': debug})
 
 def render(template_name, context={}, **kwargs):
 	
 	main_menu = []
 	for item in admin.registered_items:
-		entry = {'caption': item.__name__, 'url': reverse('juice.admin.views.list', args=[], kwargs={'object_slug': slugify(item.__name__)})}
+		entry = {'caption': item, 'url': reverse('juice.admin.views.list', args=[], kwargs={'object_slug': slugify(item)})}
 		main_menu.append(entry)
 		
 	navigation = {
